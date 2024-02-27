@@ -152,7 +152,7 @@
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
             this.toolStripStatusLabel2.Size = new System.Drawing.Size(96, 20);
-            this.toolStripStatusLabel2.Text = "Версия: 1.4.4";
+            this.toolStripStatusLabel2.Text = "Версия: 1.4.5";
             this.toolStripStatusLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // toolStripStatusLabel5

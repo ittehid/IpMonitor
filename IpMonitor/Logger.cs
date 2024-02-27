@@ -60,21 +60,19 @@ namespace IpMonitor
                 {
                     try
                     {
-                        // Время последней записи в файл
-                        DateTime lastWriteTime = File.GetLastWriteTime(logFile);
+                        // Время создания лог файла
+                        DateTime creationTime = File.GetCreationTime(logFile);
 
-                        // Проверяем, прошло ли более 5 дней с момента последней записи
-                        if ((now - lastWriteTime).TotalDays > 5)
+                        // Проверяем, прошло ли более 5 дней с момента создания файла
+                        if ((now - creationTime).TotalDays > 5)
                         {
                             // Удаляем файл
                             File.Delete(logFile);
                         }
                     }
                     catch (Exception ex)
-                    {
-                        // Здесь должна быть обработка ошибок, например, запись в другой лог или вывод сообщения
+                    {                        
                         Console.WriteLine($"Ошибка при удалении файла лога {logFile}: {ex.Message}");
-                        // В реальном приложении здесь могла бы быть запись в систему логирования
                     }
                 }
             }
