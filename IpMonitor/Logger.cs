@@ -29,15 +29,15 @@ namespace IpMonitor
             return Path.Combine(logFolderPath, $"{currentDate}.log");
         }
 
-        public async Task LogPingEventAsync(string ipAddress, string logText)
+        public async Task WriteToLogAsync(string logMessage)
         {
+            //отдельный метод для записи в лог
             try
             {
                 string logFilePath = GetLogFilePath();
 
                 using (StreamWriter logStreamWriter = File.AppendText(logFilePath))
                 {
-                    string logMessage = $"{DateTime.Now}: {ipAddress} {logText}";
                     await logStreamWriter.WriteLineAsync(logMessage);
                 }
             }
@@ -47,13 +47,19 @@ namespace IpMonitor
             }
         }
 
-        public void DeleteOldLogFiles()
+        public async Task LogPingEventAsync(string ipAddress, string logText)
+        {
+            string logMessage = $"{DateTime.Now}: {ipAddress} {logText}";
+            await WriteToLogAsync(logMessage);
+        }
+
+        public async Task DeleteOldLogFiles()
         {
             // Проверяем существование папки
             if (Directory.Exists(logFolderPath))
             {
                 // Получаем все файлы в папке
-                string[] logFiles = Directory.GetFiles(logFolderPath);               
+                string[] logFiles = Directory.GetFiles(logFolderPath);
 
                 for (int i = 0; i < logFiles.Length; i++)
                 {
@@ -63,15 +69,18 @@ namespace IpMonitor
                         string fileName = Path.GetFileNameWithoutExtension(logFiles[i]);
                         // Извлекаем дату из имени файла
                         DateTime dt = DateTime.ParseExact(fileName, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                        //Если дата лог файла меньше текущей даты на 5 дней, удаляем файл лога
-                        if(dt < DateTime.Now.AddDays(-5))                        
+                        // Если дата лог файла меньше текущей даты на 5 дней, удаляем файл лога
+                        if (dt < DateTime.Now.AddDays(-5))
                         {
                             File.Delete(logFiles[i]);
+                            //записываем в лог, что удалили
+                            string logMessage = $"{DateTime.Now}: удален лог файл {Path.GetFileName(logFiles[i])}";
+                            await WriteToLogAsync(logMessage);
                         }
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Ошибка при удалении файла лога {logFiles[i]}: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Ошибка при удалении файла лога {Path.GetFileName(logFiles[i])}: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

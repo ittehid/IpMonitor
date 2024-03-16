@@ -136,7 +136,7 @@ namespace IpMonitor
             }
         }
 
-        private void DataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private async void DataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             //вызываем меню и подключаемся по RDP
             if (e.Button == MouseButtons.Right && e.RowIndex >= 0)
@@ -145,12 +145,19 @@ namespace IpMonitor
                 dataGridView.Rows[e.RowIndex].Selected = true;
 
                 ContextMenuStrip menu = new ContextMenuStrip();
-                ToolStripMenuItem item = new ToolStripMenuItem("Подключиться по RDP");
-                item.Image = Properties.Resources.RDPlogo.ToBitmap();
+                ToolStripMenuItem item = new ToolStripMenuItem("Подключиться по RDP")
+                {
+                    //добавляем иконку к пункту меню Подключиться по RDP
+                    Image = Properties.Resources.RDPlogo.ToBitmap()
+                };
                 item.Click += (s, ev) => OpenRdp(dataGridView.Rows[e.RowIndex].Cells["IpName"].Value.ToString());
+                
                 menu.Items.Add(item);
-
                 menu.Show(Cursor.Position);
+                //записываем в лог, что подключались по RDP
+                string ip = dataGridView.Rows[e.RowIndex].Cells["IpName"].Value.ToString();
+                string logMessage = $"{DateTime.Now}: подключение по RDP к {ip}";
+                await logger.WriteToLogAsync(logMessage);
             }
         }
 
@@ -260,7 +267,7 @@ namespace IpMonitor
 
                 // Запустите асинхронный метод для пинга в фоновом потоке
                 await PingHostsAsync();
-                logger.DeleteOldLogFiles();
+                await logger.DeleteOldLogFiles();
             }
             else
             {

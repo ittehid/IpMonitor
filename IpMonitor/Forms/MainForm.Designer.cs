@@ -134,7 +134,7 @@
             // toolStripStatusLabel4
             // 
             this.toolStripStatusLabel4.Name = "toolStripStatusLabel4";
-            this.toolStripStatusLabel4.Size = new System.Drawing.Size(60, 20);
+            this.toolStripStatusLabel4.Size = new System.Drawing.Size(46, 20);
             this.toolStripStatusLabel4.Spring = true;
             // 
             // toolStripStatusLabel1
@@ -152,14 +152,14 @@
             // toolStripStatusLabel2
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(107, 20);
-            this.toolStripStatusLabel2.Text = "Версия: 1.4.7.1";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(96, 20);
+            this.toolStripStatusLabel2.Text = "Версия: 1.4.8";
             this.toolStripStatusLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // toolStripStatusLabel5
             // 
             this.toolStripStatusLabel5.Name = "toolStripStatusLabel5";
-            this.toolStripStatusLabel5.Size = new System.Drawing.Size(60, 20);
+            this.toolStripStatusLabel5.Size = new System.Drawing.Size(46, 20);
             this.toolStripStatusLabel5.Spring = true;
             // 
             // MainForm
