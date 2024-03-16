@@ -145,7 +145,8 @@ namespace IpMonitor
                 dataGridView.Rows[e.RowIndex].Selected = true;
 
                 ContextMenuStrip menu = new ContextMenuStrip();
-                ToolStripMenuItem item = new ToolStripMenuItem("RDP");
+                ToolStripMenuItem item = new ToolStripMenuItem("Подключиться по RDP");
+                item.Image = Properties.Resources.RDPlogo.ToBitmap();
                 item.Click += (s, ev) => OpenRdp(dataGridView.Rows[e.RowIndex].Cells["IpName"].Value.ToString());
                 menu.Items.Add(item);
 

@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ping.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\ping.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -88,6 +88,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -103,7 +104,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ping.ico" />
+    <EmbeddedResource Include="Resources\ping.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\RDPlogo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
