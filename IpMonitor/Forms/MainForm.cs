@@ -1,6 +1,7 @@
 ﻿using IpMonitor.Forms;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Net.NetworkInformation;
@@ -135,6 +136,28 @@ namespace IpMonitor
             }
         }
 
+        private void DataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            //вызываем меню и подключаемся по RDP
+            if (e.Button == MouseButtons.Right && e.RowIndex >= 0)
+            {
+                dataGridView.ClearSelection();
+                dataGridView.Rows[e.RowIndex].Selected = true;
+
+                ContextMenuStrip menu = new ContextMenuStrip();
+                ToolStripMenuItem item = new ToolStripMenuItem("RDP");
+                item.Click += (s, ev) => OpenRdp(dataGridView.Rows[e.RowIndex].Cells["IpName"].Value.ToString());
+                menu.Items.Add(item);
+
+                menu.Show(Cursor.Position);
+            }
+        }
+
+        private void OpenRdp(string ipAddress)
+        {
+            Process.Start("mstsc", $"/v:{ipAddress}");
+        }
+
         private void MainForm_Load(object sender, EventArgs e)
         {
             string filePath = "data.xml";
@@ -216,7 +239,7 @@ namespace IpMonitor
             catch (Exception ex)
             {
                 // Обработайте ошибку, если что-то пошло не так
-                Console.WriteLine($"Ошибка при пинге {ipAddress}: {ex.Message}");
+                MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

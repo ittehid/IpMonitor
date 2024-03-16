@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace IpMonitor
 {
@@ -41,38 +43,35 @@ namespace IpMonitor
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при записи в лог: {ex.Message}");
+                MessageBox.Show($"Ошибка при записи в лог: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         public void DeleteOldLogFiles()
-        {            
+        {
             // Проверяем существование папки
             if (Directory.Exists(logFolderPath))
             {
                 // Получаем все файлы в папке
-                string[] logFiles = Directory.GetFiles(logFolderPath);
+                string[] logFiles = Directory.GetFiles(logFolderPath);               
 
-                // Текущее время
-                DateTime now = DateTime.Now;
-
-                foreach (string logFile in logFiles)
+                for (int i = 0; i < logFiles.Length; i++)
                 {
                     try
                     {
-                        // Время создания лог файла
-                        DateTime creationTime = File.GetCreationTime(logFile);
-
-                        // Проверяем, прошло ли более 5 дней с момента создания файла
-                        if ((now - creationTime).TotalDays > 5)
+                        // Получаем название лог файлов
+                        string fileName = Path.GetFileNameWithoutExtension(logFiles[i]);
+                        // Извлекаем дату из имени файла
+                        DateTime dt = DateTime.ParseExact(fileName, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                        //Если дата лог файла меньше текущей даты на 5 дней, удаляем файл лога
+                        if(dt < DateTime.Now.AddDays(-5))                        
                         {
-                            // Удаляем файл
-                            File.Delete(logFile);
+                            File.Delete(logFiles[i]);
                         }
                     }
                     catch (Exception ex)
-                    {                        
-                        Console.WriteLine($"Ошибка при удалении файла лога {logFile}: {ex.Message}");
+                    {
+                        MessageBox.Show($"Ошибка при удалении файла лога {logFiles[i]}: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

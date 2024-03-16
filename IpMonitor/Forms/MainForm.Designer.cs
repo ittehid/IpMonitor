@@ -103,6 +103,7 @@
             this.dataGridView.Size = new System.Drawing.Size(431, 486);
             this.dataGridView.TabIndex = 3;
             this.dataGridView.TabStop = false;
+            this.dataGridView.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView_CellMouseClick);
             // 
             // runButton
             // 
@@ -152,7 +153,7 @@
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
             this.toolStripStatusLabel2.Size = new System.Drawing.Size(96, 20);
-            this.toolStripStatusLabel2.Text = "Версия: 1.4.5";
+            this.toolStripStatusLabel2.Text = "Версия: 1.4.7";
             this.toolStripStatusLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // toolStripStatusLabel5
