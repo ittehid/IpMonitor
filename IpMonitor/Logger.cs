@@ -53,7 +53,7 @@ namespace IpMonitor
             await WriteToLogAsync(logMessage);
         }
 
-        public async Task DeleteOldLogFiles()
+        public async Task DeleteOldLogFilesAsync()
         {
             // Проверяем существование папки
             if (Directory.Exists(logFolderPath))
@@ -74,7 +74,7 @@ namespace IpMonitor
                         {
                             File.Delete(logFiles[i]);
                             //записываем в лог, что удалили
-                            string logMessage = $"{DateTime.Now}: удален лог файл {Path.GetFileName(logFiles[i])}";
+                            string logMessage = $"{DateTime.Now}: удален файл лога {Path.GetFileName(logFiles[i])}";
                             await WriteToLogAsync(logMessage);
                         }
                     }

@@ -35,9 +35,13 @@ namespace IpMonitor
 
             pingTimer = new Timer
             {
-                Interval = 5000 // Интервал в миллисекундах
+                Interval = 10000 // Интервал в миллисекундах
             };
-            pingTimer.Tick += async (s, eventArgs) => await PingHostsAsync();
+            
+            pingTimer.Tick += async (s, eventArgs) => {
+                await PingHostsAsync();
+                await logger.DeleteOldLogFilesAsync();
+            };
         }
 
         private void AddButton_Click(object sender, EventArgs e)
@@ -136,7 +140,7 @@ namespace IpMonitor
             }
         }
 
-        private async void DataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void DataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             //вызываем меню и подключаемся по RDP
             if (e.Button == MouseButtons.Right && e.RowIndex >= 0)
@@ -150,20 +154,20 @@ namespace IpMonitor
                     //добавляем иконку к пункту меню Подключиться по RDP
                     Image = Properties.Resources.RDPlogo.ToBitmap()
                 };
-                item.Click += (s, ev) => OpenRdp(dataGridView.Rows[e.RowIndex].Cells["IpName"].Value.ToString());
-                
+                item.Click += async (s, ev) => await OpenRdp(dataGridView.Rows[e.RowIndex].Cells["IpName"].Value.ToString(), e.RowIndex);
+
                 menu.Items.Add(item);
-                menu.Show(Cursor.Position);
-                //записываем в лог, что подключались по RDP
-                string ip = dataGridView.Rows[e.RowIndex].Cells["IpName"].Value.ToString();
-                string logMessage = $"{DateTime.Now}: подключение по RDP к {ip}";
-                await logger.WriteToLogAsync(logMessage);
+                menu.Show(Cursor.Position);                 
             }
         }
 
-        private void OpenRdp(string ipAddress)
+        private async Task OpenRdp(string ipAddress, int rowIndex)
         {
             Process.Start("mstsc", $"/v:{ipAddress}");
+            //записываем в лог, что подключались по RDP
+            string ip = dataGridView.Rows[rowIndex].Cells["IpName"].Value.ToString();
+            string logMessage = $"{DateTime.Now}: подключение по RDP к {ip}";
+            await logger.WriteToLogAsync(logMessage);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -267,7 +271,7 @@ namespace IpMonitor
 
                 // Запустите асинхронный метод для пинга в фоновом потоке
                 await PingHostsAsync();
-                await logger.DeleteOldLogFiles();
+                await logger.DeleteOldLogFilesAsync();
             }
             else
             {
