@@ -285,6 +285,11 @@ namespace IpMonitor
                 // Остановите таймер
                 pingTimer.Stop();
 
+                // Сброс цвета ячеек при остановке мониторинга в столбце 'IpName'
+                foreach (DataGridViewRow row in dataGridView.Rows)
+                {
+                    row.Cells["IpName"].Style.BackColor = Color.Empty;
+                }
             }
         }
         private void MainForm_MouseDown(object sender, MouseEventArgs e)
