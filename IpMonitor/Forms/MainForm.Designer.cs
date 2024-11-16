@@ -153,7 +153,7 @@
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
             this.toolStripStatusLabel2.Size = new System.Drawing.Size(96, 20);
-            this.toolStripStatusLabel2.Text = "Версия: 1.5.0";
+            this.toolStripStatusLabel2.Text = "Версия: 1.5.1";
             this.toolStripStatusLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // toolStripStatusLabel5
@@ -175,7 +175,7 @@
             this.Controls.Add(this.addButton);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(474, 42);
+            this.MinimumSize = new System.Drawing.Size(474, 47);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "IP Мониторинг";

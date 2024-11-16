@@ -35,7 +35,7 @@ namespace IpMonitor
 
             pingTimer = new Timer
             {
-                Interval = 10000 // Интервал в миллисекундах
+                Interval = 300000 // Интервал в миллисекундах
             };
             
             pingTimer.Tick += async (s, eventArgs) => {
