@@ -1,4 +1,4 @@
-﻿using IpMonitor.Models;
+using IpMonitor.Models;
 using IpMonitor.Storage;
 using IpMonitor.UI;
 
@@ -33,7 +33,6 @@ public partial class EventsForm : Form
         lblHeaderHint.ForeColor = UiTheme.TextMuted;
         pnlFilters.BackColor = UiTheme.Surface;
         pnlBottom.BackColor = UiTheme.Surface;
-        UiTheme.RoundControl(pnlFilters, 8);
 
         cboPeriod.Items.AddRange(new object[] { "24 часа", "7 дней", "30 дней", "Всё время" });
         cboType.Items.AddRange(new object[] { "Все записи", "Нет связи сейчас", "Восстановлено" });
@@ -194,9 +193,7 @@ public partial class EventsForm : Form
 
         if (item.IsOngoing)
         {
-            e.CellStyle.BackColor = UiTheme.DangerSoft;
-            e.CellStyle.SelectionBackColor = UiTheme.Blend(UiTheme.DangerSoft, UiTheme.AccentSoft, 0.35);
-
+            // В строгой теме строка не заливается цветом целиком — статус выделяется только текстом.
             if (e.ColumnIndex == colRecoveredAt.Index || e.ColumnIndex == colDowntime.Index)
             {
                 e.CellStyle.ForeColor = UiTheme.Danger;

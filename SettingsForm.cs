@@ -15,22 +15,7 @@ public partial class SettingsForm : Form
     {
         InitializeComponent();
         _sourceSortMode = source.HostSortMode;
-        UiTheme.Apply(this);
-        UiTheme.StylePrimaryButton(btnSave);
-        UiTheme.StyleSecondaryButton(btnCancel);
-        UiTheme.StyleSecondaryButton(btnTestOfflineSound);
-        UiTheme.StyleSecondaryButton(btnTestOnlineSound);
-        UiTheme.StyleSecondaryButton(btnOpenDataFolder);
-        UiTheme.StyleSecondaryButton(btnBackupNow);
-        UiTheme.StyleSecondaryButton(btnOpenBackupFolder);
-        lblHeaderHint.ForeColor = UiTheme.TextMuted;
-        lblGeneralHint.ForeColor = UiTheme.TextMuted;
-        lblFailuresHint.ForeColor = UiTheme.TextMuted;
-        lblSuccessesHint.ForeColor = UiTheme.TextMuted;
-        lblLatencyHint.ForeColor = UiTheme.TextMuted;
-        lblDataPath.ForeColor = UiTheme.TextMuted;
-        lblBackupHint.ForeColor = UiTheme.TextMuted;
-        pnlBottom.BackColor = UiTheme.Surface;
+        ApplyThemeStyles();
 
         chkStartMonitoring.Checked = source.StartMonitoringOnLaunch;
         chkMinimizeToTray.Checked = source.MinimizeToTray;
@@ -83,6 +68,27 @@ public partial class SettingsForm : Form
         BackupMaxCopies = (int)nudBackupCopies.Value,
         BackupRetentionDays = (int)nudBackupRetention.Value
     };
+
+    private void ApplyThemeStyles()
+    {
+        UiTheme.Apply(this);
+        UiTheme.StylePrimaryButton(btnSave);
+        UiTheme.StyleSecondaryButton(btnCancel);
+        UiTheme.StyleSecondaryButton(btnTestOfflineSound);
+        UiTheme.StyleSecondaryButton(btnTestOnlineSound);
+        UiTheme.StyleSecondaryButton(btnOpenDataFolder);
+        UiTheme.StyleSecondaryButton(btnBackupNow);
+        UiTheme.StyleSecondaryButton(btnOpenBackupFolder);
+        lblHeaderHint.ForeColor = UiTheme.TextMuted;
+        lblGeneralHint.ForeColor = UiTheme.TextMuted;
+        lblFailuresHint.ForeColor = UiTheme.TextMuted;
+        lblSuccessesHint.ForeColor = UiTheme.TextMuted;
+        lblLatencyHint.ForeColor = UiTheme.TextMuted;
+        lblDataPath.ForeColor = UiTheme.TextMuted;
+        lblBackupHint.ForeColor = UiTheme.TextMuted;
+        pnlBottom.BackColor = UiTheme.Surface;
+        Invalidate(true);
+    }
 
     private void btnSave_Click(object? sender, EventArgs e)
     {

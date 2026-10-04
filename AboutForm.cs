@@ -9,7 +9,7 @@ public partial class AboutForm : Form
     {
         InitializeComponent();
         UiTheme.Apply(this);
-        UiTheme.StylePrimaryButton(btnClose);
+        UiTheme.StyleSecondaryButton(btnClose);
 
         lblVersion.ForeColor = UiTheme.TextMuted;
         lblDescription.ForeColor = UiTheme.TextSecondary;

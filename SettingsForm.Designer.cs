@@ -195,9 +195,9 @@ partial class SettingsForm
         chkAlwaysOnTop.AutoSize = true;
         chkAlwaysOnTop.Location = new Point(14, 108);
         chkAlwaysOnTop.Text = "Всегда поверх других окон";
-        lblGeneralHint.Location = new Point(14, 146);
-        lblGeneralHint.Size = new Size(345, 44);
-        lblGeneralHint.Text = "При работе в трее мониторинг продолжает работать.\r\nПолный выход — через меню значка в трее.";
+        lblGeneralHint.Location = new Point(14, 148);
+        lblGeneralHint.Size = new Size(345, 38);
+        lblGeneralHint.Text = "Строгий светлый интерфейс IP Monitor используется постоянно.";
 
         // Мониторинг
         tabMonitoring.BackColor = Color.White;

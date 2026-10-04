@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Drawing.Drawing2D;
 using System.Net;
 using IpMonitor.Models;
 using IpMonitor.Services;
@@ -29,12 +28,13 @@ public partial class MainForm : Form
     public MainForm()
     {
         InitializeComponent();
+        _settings = _settingsRepository.Load();
         UiTheme.Apply(this);
         ApplyModernStyle();
+
         if (Icon is not null)
             notifyIcon.Icon = (Icon)Icon.Clone();
 
-        _settings = _settingsRepository.Load();
         _hosts = _hostRepository.Load();
         ApplyStoredSortMode();
         TopMost = _settings.AlwaysOnTop;
@@ -78,7 +78,7 @@ public partial class MainForm : Form
         lblTitle.ForeColor = UiTheme.TextPrimary;
         lblSubtitle.ForeColor = UiTheme.TextMuted;
 
-        UiTheme.StylePrimaryButton(btnMonitoring);
+        UiTheme.StyleSecondaryButton(btnMonitoring);
         UiTheme.StyleSecondaryButton(btnAddHost);
         UiTheme.StyleGhostButton(btnEvents);
         UiTheme.StyleGhostButton(btnSettings);
@@ -101,7 +101,7 @@ public partial class MainForm : Form
         UiTheme.StyleContextMenu(cmsMore);
         UiTheme.StyleContextMenu(cmsTray);
 
-        // Список оформлен в той же стилистике, что и таблицы Amnezia Manager.
+        // Строгая таблица без карточек, скруглений и декоративных заливок.
         // Геометрия строк и колонок задаётся отдельно с учётом текущего DPI.
         EnableDoubleBuffering(dgvHosts);
         dgvHosts.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
@@ -109,8 +109,8 @@ public partial class MainForm : Form
         dgvHosts.ColumnHeadersDefaultCellStyle.Padding = new Padding(5, 0, 5, 0);
         dgvHosts.DefaultCellStyle.Font = new Font("Segoe UI", 8.25F);
         dgvHosts.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 8.25F);
-        dgvHosts.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(252, 252, 254);
-        dgvHosts.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+        dgvHosts.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 250, 250);
+        dgvHosts.CellBorderStyle = DataGridViewCellBorderStyle.Single;
         dgvHosts.GridColor = UiTheme.Border;
 
         colStatus.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -387,8 +387,8 @@ public partial class MainForm : Form
         lblWarning.Text = $"▲ Warn {activeHosts.Count(x => x.State == HostState.Warning)}";
         lblOffline.Text = $"● Offline {activeHosts.Count(x => x.State == HostState.Offline)}";
         lblDisabled.Text = maintenance > 0 ? $"◆ Пауза {paused}" : $"○ Пауза {paused}";
-        lblDisabled.BackColor = maintenance > 0 ? UiTheme.AccentSoft : UiTheme.SurfaceAlt;
-        lblDisabled.ForeColor = maintenance > 0 ? UiTheme.Accent : UiTheme.TextMuted;
+        lblDisabled.BackColor = UiTheme.Surface;
+        lblDisabled.ForeColor = maintenance > 0 ? UiTheme.Maintenance : UiTheme.TextMuted;
         toolTip.SetToolTip(lblDisabled, $"Отключено: {disabled} · Обслуживание: {maintenance}");
         tslHosts.Text = $"Хостов: {_hosts.Count}";
         UpdateEmptyState();
@@ -466,6 +466,10 @@ public partial class MainForm : Form
     {
         var running = _monitoringService?.IsRunning == true;
         btnMonitoring.Text = running ? "■ Стоп" : "▶ Старт";
+        if (running)
+            UiTheme.StyleDangerButton(btnMonitoring);
+        else
+            UiTheme.StyleSuccessButton(btnMonitoring);
         miTrayMonitoring.Text = running ? "Остановить мониторинг" : "Запустить мониторинг";
         tslState.Text = running ? "● Мониторинг" : "Мониторинг остановлен";
         tslState.ForeColor = running ? UiTheme.Success : UiTheme.TextMuted;
@@ -1207,26 +1211,14 @@ private void miAbout_Click(object? sender, EventArgs e)
         {
             e.PaintBackground(e.CellBounds, true);
 
-            var (back, fore) = HostBadgeColors(host);
-            var horizontalInset = Math.Max(3, (int)Math.Round(4 * e.Graphics.DpiX / 96f));
-            var desiredBadgeHeight = Math.Max(20, (int)Math.Round(20 * e.Graphics.DpiY / 96f));
-            var badgeHeight = Math.Min(desiredBadgeHeight, Math.Max(18, e.CellBounds.Height - 4));
-            var badge = new Rectangle(
-                e.CellBounds.X + horizontalInset,
-                e.CellBounds.Y + Math.Max(2, (e.CellBounds.Height - badgeHeight) / 2),
-                Math.Max(4, e.CellBounds.Width - horizontalInset * 2),
-                badgeHeight);
-
-            using (var path = CreateRoundedPath(badge, 7))
-            using (var brush = new SolidBrush(back))
-                e.Graphics.FillPath(brush, path);
-
+            var fore = HostAccentColor(host);
+            var textBounds = Rectangle.Inflate(e.CellBounds, -4, 0);
             using var statusFont = new Font("Segoe UI Semibold", 7.35F, FontStyle.Regular, GraphicsUnit.Point);
             TextRenderer.DrawText(
                 e.Graphics,
                 BuildResponseText(host),
                 statusFont,
-                badge,
+                textBounds,
                 fore,
                 TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter |
                 TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding);
@@ -1238,8 +1230,10 @@ private void miAbout_Click(object? sender, EventArgs e)
 
     private static Color HostAccentColor(MonitorHost host)
     {
-        if (host.IsChecking || host.IsInMaintenance)
+        if (host.IsChecking)
             return UiTheme.Accent;
+        if (host.IsInMaintenance)
+            return UiTheme.Maintenance;
 
         return host.State switch
         {
@@ -1248,42 +1242,6 @@ private void miAbout_Click(object? sender, EventArgs e)
             HostState.Offline => UiTheme.Danger,
             _ => UiTheme.TextMuted
         };
-    }
-
-    private static (Color Back, Color Fore) HostBadgeColors(MonitorHost host)
-    {
-        if (host.IsChecking || host.IsInMaintenance)
-            return (UiTheme.AccentSoft, UiTheme.Accent);
-
-        return host.State switch
-        {
-            HostState.Online => (UiTheme.SuccessSoft, UiTheme.Success),
-            HostState.Warning => (UiTheme.WarningSoft, UiTheme.Warning),
-            HostState.Offline => (UiTheme.DangerSoft, UiTheme.Danger),
-            _ => (UiTheme.SurfaceAlt, UiTheme.TextMuted)
-        };
-    }
-
-    private static GraphicsPath CreateRoundedPath(Rectangle bounds, int radius)
-    {
-        var path = new GraphicsPath();
-        if (bounds.Width <= 1 || bounds.Height <= 1)
-        {
-            path.AddRectangle(bounds);
-            return path;
-        }
-
-        var diameter = Math.Min(Math.Min(radius * 2, bounds.Width), bounds.Height);
-        var arc = new Rectangle(bounds.X, bounds.Y, diameter, diameter);
-        path.AddArc(arc, 180, 90);
-        arc.X = bounds.Right - diameter;
-        path.AddArc(arc, 270, 90);
-        arc.Y = bounds.Bottom - diameter;
-        path.AddArc(arc, 0, 90);
-        arc.X = bounds.Left;
-        path.AddArc(arc, 90, 90);
-        path.CloseFigure();
-        return path;
     }
 
     private void dgvHosts_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
@@ -1296,7 +1254,7 @@ private void miAbout_Click(object? sender, EventArgs e)
 
         if (e.ColumnIndex == colStatus.Index || e.ColumnIndex == colResponse.Index)
         {
-            e.CellStyle.ForeColor = host.IsChecking || host.IsInMaintenance ? UiTheme.Accent : host.State switch
+            e.CellStyle.ForeColor = host.IsChecking ? UiTheme.Accent : host.IsInMaintenance ? UiTheme.Maintenance : host.State switch
             {
                 HostState.Online => UiTheme.Success,
                 HostState.Warning => UiTheme.Warning,

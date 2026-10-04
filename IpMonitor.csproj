@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>IpMonitor</AssemblyName>
     <RootNamespace>IpMonitor</RootNamespace>
-    <Version>2.0.17</Version>
+    <Version>2.0.19</Version>
     <Authors>Alexandr Gedz</Authors>
     <Product>IP Monitor</Product>
     <Description>Compact local host availability monitor</Description>
