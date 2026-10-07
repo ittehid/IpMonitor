@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace IpMonitor;
 
@@ -62,7 +62,6 @@ partial class SettingsForm
     private Button btnBackupNow;
     private Button btnOpenBackupFolder;
     private Panel pnlBottom;
-    private FlowLayoutPanel flpBottomButtons;
     private Button btnCancel;
     private Button btnSave;
 
@@ -132,7 +131,6 @@ partial class SettingsForm
         btnBackupNow = new Button();
         btnOpenBackupFolder = new Button();
         pnlBottom = new Panel();
-        flpBottomButtons = new FlowLayoutPanel();
         btnCancel = new Button();
         btnSave = new Button();
 
@@ -153,7 +151,6 @@ partial class SettingsForm
         ((ISupportInitialize)nudBackupCopies).BeginInit();
         ((ISupportInitialize)nudBackupRetention).BeginInit();
         pnlBottom.SuspendLayout();
-        flpBottomButtons.SuspendLayout();
         SuspendLayout();
 
         lblHeader.AutoSize = true;
@@ -310,14 +307,14 @@ partial class SettingsForm
         chkSoundOffline.Location = new Point(14, 22);
         chkSoundOffline.Text = "Звук при Offline";
         btnTestOfflineSound.Location = new Point(278, 17);
-        btnTestOfflineSound.Size = new Size(78, 27);
+        btnTestOfflineSound.Size = new Size(96, 27);
         btnTestOfflineSound.Text = "Проверить";
         btnTestOfflineSound.Click += btnTestOfflineSound_Click;
         chkSoundOnline.AutoSize = true;
         chkSoundOnline.Location = new Point(14, 58);
         chkSoundOnline.Text = "Звук при восстановлении";
         btnTestOnlineSound.Location = new Point(278, 53);
-        btnTestOnlineSound.Size = new Size(78, 27);
+        btnTestOnlineSound.Size = new Size(96, 27);
         btnTestOnlineSound.Text = "Проверить";
         btnTestOnlineSound.Click += btnTestOnlineSound_Click;
         chkTrayNotifications.AutoSize = true;
@@ -348,7 +345,7 @@ partial class SettingsForm
         chkAutoDelete.Location = new Point(14, 58);
         chkAutoDelete.Text = "Удалять старые события автоматически";
         btnOpenDataFolder.Location = new Point(14, 94);
-        btnOpenDataFolder.Size = new Size(136, 27);
+        btnOpenDataFolder.Size = new Size(160, 27);
         btnOpenDataFolder.Text = "Открыть папку данных";
         btnOpenDataFolder.Click += btnOpenDataFolder_Click;
         lblDataPath.Location = new Point(14, 132);
@@ -408,40 +405,43 @@ partial class SettingsForm
         lblBackupHint.Size = new Size(345, 42);
         lblBackupHint.Text = "Копия создаётся перед изменением конфигурации.\r\nСохраняются hosts.json и settings.json; журнал не дублируется.";
         btnBackupNow.Location = new Point(14, 202);
-        btnBackupNow.Size = new Size(134, 27);
+        btnBackupNow.Size = new Size(144, 27);
         btnBackupNow.Text = "Создать сейчас";
         btnBackupNow.Click += btnBackupNow_Click;
-        btnOpenBackupFolder.Location = new Point(156, 202);
-        btnOpenBackupFolder.Size = new Size(164, 27);
+        btnOpenBackupFolder.Location = new Point(168, 202);
+        btnOpenBackupFolder.Size = new Size(178, 27);
         btnOpenBackupFolder.Text = "Открыть папку копий";
         btnOpenBackupFolder.Click += btnOpenBackupFolder_Click;
 
-        // Нижняя панель
+        // Нижняя панель. Кнопки размещены непосредственно в Designer,
+        // чтобы их можно было двигать и менять размер мышкой в Visual Studio.
         pnlBottom.BackColor = Color.White;
-        pnlBottom.Controls.Add(flpBottomButtons);
+        pnlBottom.Controls.Add(btnCancel);
+        pnlBottom.Controls.Add(btnSave);
         pnlBottom.Dock = DockStyle.Bottom;
-        pnlBottom.Height = 44;
-        flpBottomButtons.AutoSize = true;
-        flpBottomButtons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        flpBottomButtons.Controls.Add(btnSave);
-        flpBottomButtons.Controls.Add(btnCancel);
-        flpBottomButtons.Dock = DockStyle.Right;
-        flpBottomButtons.FlowDirection = FlowDirection.RightToLeft;
-        flpBottomButtons.Padding = new Padding(0, 8, 10, 0);
-        flpBottomButtons.WrapContents = false;
-        btnSave.Margin = new Padding(0, 0, 6, 0);
-        btnSave.Size = new Size(78, 27);
+        pnlBottom.Location = new Point(0, 334);
+        pnlBottom.Name = "pnlBottom";
+        pnlBottom.Size = new Size(420, 48);
+        pnlBottom.TabIndex = 3;
+        btnSave.Location = new Point(290, 10);
+        btnSave.Name = "btnSave";
+        btnSave.Size = new Size(116, 29);
+        btnSave.TabIndex = 1;
         btnSave.Text = "Сохранить";
         btnSave.Click += btnSave_Click;
         btnCancel.DialogResult = DialogResult.Cancel;
-        btnCancel.Margin = new Padding(0);
-        btnCancel.Size = new Size(70, 27);
+        btnCancel.Location = new Point(184, 10);
+        btnCancel.Name = "btnCancel";
+        btnCancel.Size = new Size(96, 29);
+        btnCancel.TabIndex = 0;
         btnCancel.Text = "Отмена";
 
         AcceptButton = btnSave;
         CancelButton = btnCancel;
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
+        BackColor = Color.FromArgb(243, 245, 247);
+        ForeColor = Color.FromArgb(31, 41, 55);
         ClientSize = new Size(420, 382);
         Controls.Add(lblHeader);
         Controls.Add(lblHeaderHint);
@@ -478,8 +478,6 @@ partial class SettingsForm
         ((ISupportInitialize)nudBackupRetention).EndInit();
         pnlBottom.ResumeLayout(false);
         pnlBottom.PerformLayout();
-        flpBottomButtons.ResumeLayout(false);
-        flpBottomButtons.PerformLayout();
         ResumeLayout(false);
         PerformLayout();
     }

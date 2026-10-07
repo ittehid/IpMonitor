@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace IpMonitor;
 
@@ -74,16 +74,17 @@ partial class AboutForm
         linkGitHub.Text = "github.com/ittehid/IpMonitor";
         linkGitHub.LinkClicked += linkGitHub_LinkClicked;
 
-        btnClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         btnClose.DialogResult = DialogResult.Cancel;
-        btnClose.Location = new Point(244, 200);
-        btnClose.Name = "btnClose";
-        btnClose.Size = new Size(72, 27);
+        btnClose.Location = new Point(220, 200);
+                btnClose.Name = "btnClose";
+        btnClose.Size = new Size(96, 27);
         btnClose.Text = "Закрыть";
 
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
         CancelButton = btnClose;
+        BackColor = Color.FromArgb(243, 245, 247);
+        ForeColor = Color.FromArgb(31, 41, 55);
         ClientSize = new Size(330, 240);
         Controls.Add(picIcon);
         Controls.Add(lblTitle);

@@ -71,6 +71,7 @@ internal sealed class EventRepository
 
                 var outage = new OutageRecord
                 {
+                    OfflineEventId = item.Id,
                     HostId = item.HostId,
                     HostName = item.HostName,
                     Address = item.Address,
@@ -86,6 +87,7 @@ internal sealed class EventRepository
             if (open.TryGetValue(item.HostId, out var current))
             {
                 current.RecoveredAt = item.Timestamp;
+                current.RecoveryEventId = item.Id;
                 // Имя/адрес могли быть изменены во время падения — в журнале оставляем
                 // актуальные значения на момент восстановления, если они присутствуют.
                 if (!string.IsNullOrWhiteSpace(item.HostName))
@@ -100,6 +102,7 @@ internal sealed class EventRepository
                 // только событие Online, точное начало можно восстановить из Downtime.
                 result.Add(new OutageRecord
                 {
+                    RecoveryEventId = item.Id,
                     HostId = item.HostId,
                     HostName = item.HostName,
                     Address = item.Address,
@@ -110,6 +113,34 @@ internal sealed class EventRepository
         }
 
         return result.OrderByDescending(x => x.LostAt).ToList();
+    }
+
+
+    /// <summary>
+    /// Удаляет один выбранный завершённый период недоступности.
+    /// Активный период удалять нельзя: его начало нужно сохранить до восстановления связи.
+    /// </summary>
+    public bool DeleteOutage(OutageRecord outage)
+    {
+        if (outage.IsOngoing)
+            return false;
+
+        var ids = new HashSet<Guid>();
+        if (outage.OfflineEventId != Guid.Empty)
+            ids.Add(outage.OfflineEventId);
+        if (outage.RecoveryEventId != Guid.Empty)
+            ids.Add(outage.RecoveryEventId);
+
+        if (ids.Count == 0)
+            return false;
+
+        var all = LoadAll().OrderBy(x => x.Timestamp).ToList();
+        var keep = all.Where(x => !ids.Contains(x.Id)).OrderBy(x => x.Timestamp).ToList();
+        if (keep.Count == all.Count)
+            return false;
+
+        Rewrite(keep);
+        return true;
     }
 
     /// <summary>

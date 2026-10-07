@@ -1,29 +1,29 @@
-namespace IpMonitor.UI;
+﻿namespace IpMonitor.UI;
 
 internal static class UiTheme
 {
-    // IP Monitor 2.0.19: единая строгая светлая тема.
-    // Тёмная и системная темы намеренно удалены из приложения.
-    public static Color Background => Color.FromArgb(245, 245, 245);
+    // IP Monitor 2.0.25: Business Blue — строгая светлая тема с современным синим акцентом.
+    // Геометрия и все визуальные контролы остаются в WinForms Designer; здесь только единые правила оформления.
+    public static Color Background => Color.FromArgb(243, 245, 247);
     public static Color Surface => Color.White;
-    public static Color SurfaceAlt => Color.FromArgb(245, 245, 245);
+    public static Color SurfaceAlt => Color.FromArgb(248, 250, 252);
     public static Color InputBackground => Color.White;
-    public static Color Sidebar => Color.FromArgb(248, 248, 248);
-    public static Color Border => Color.FromArgb(207, 207, 207);
-    public static Color TextPrimary => Color.FromArgb(31, 31, 31);
-    public static Color TextSecondary => Color.FromArgb(82, 82, 82);
-    public static Color TextMuted => Color.FromArgb(104, 104, 104);
+    public static Color Sidebar => Color.FromArgb(246, 248, 251);
+    public static Color Border => Color.FromArgb(216, 222, 230);
+    public static Color TextPrimary => Color.FromArgb(31, 41, 55);
+    public static Color TextSecondary => Color.FromArgb(75, 85, 99);
+    public static Color TextMuted => Color.FromArgb(107, 114, 128);
     public static Color Accent => Color.FromArgb(37, 99, 235);
     public static Color AccentDark => Color.FromArgb(29, 78, 216);
-    public static Color AccentSoft => Color.FromArgb(232, 240, 254);
-    public static Color Success => Color.FromArgb(22, 128, 60);
-    public static Color SuccessSoft => Color.FromArgb(235, 247, 238);
-    public static Color Warning => Color.FromArgb(183, 121, 0);
-    public static Color WarningSoft => Color.FromArgb(255, 247, 226);
-    public static Color Danger => Color.FromArgb(196, 43, 28);
-    public static Color DangerSoft => Color.FromArgb(253, 237, 235);
-    public static Color Maintenance => Color.FromArgb(101, 84, 192);
-    public static Color MaintenanceSoft => Color.FromArgb(241, 238, 255);
+    public static Color AccentSoft => Color.FromArgb(234, 242, 255);
+    public static Color Success => Color.FromArgb(22, 163, 74);
+    public static Color SuccessSoft => Color.FromArgb(236, 253, 243);
+    public static Color Warning => Color.FromArgb(217, 119, 6);
+    public static Color WarningSoft => Color.FromArgb(255, 247, 230);
+    public static Color Danger => Color.FromArgb(220, 38, 38);
+    public static Color DangerSoft => Color.FromArgb(254, 242, 242);
+    public static Color Maintenance => Color.FromArgb(124, 58, 237);
+    public static Color MaintenanceSoft => Color.FromArgb(243, 232, 255);
 
     public static void Apply(Form form)
     {
@@ -43,6 +43,7 @@ internal static class UiTheme
         }
 
         ApplyControlTree(form);
+
     }
 
     public static void StylePrimaryButton(Button button) => StyleButton(button, Accent, Color.White, Accent, 1);
@@ -61,9 +62,9 @@ internal static class UiTheme
         grid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
         grid.ColumnHeadersHeight = 30;
         grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-        grid.ColumnHeadersDefaultCellStyle.BackColor = SurfaceAlt;
+        grid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(243, 246, 250);
         grid.ColumnHeadersDefaultCellStyle.ForeColor = TextPrimary;
-        grid.ColumnHeadersDefaultCellStyle.SelectionBackColor = SurfaceAlt;
+        grid.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(243, 246, 250);
         grid.ColumnHeadersDefaultCellStyle.SelectionForeColor = TextPrimary;
         grid.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 8.25F);
         grid.ColumnHeadersDefaultCellStyle.Padding = new Padding(4, 0, 4, 0);
@@ -72,7 +73,7 @@ internal static class UiTheme
         grid.DefaultCellStyle.SelectionBackColor = AccentSoft;
         grid.DefaultCellStyle.SelectionForeColor = TextPrimary;
         grid.DefaultCellStyle.Padding = new Padding(4, 2, 4, 2);
-        grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 250, 250);
+        grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
         grid.AlternatingRowsDefaultCellStyle.SelectionBackColor = AccentSoft;
         grid.AlternatingRowsDefaultCellStyle.SelectionForeColor = TextPrimary;
         grid.RowTemplate.Height = 30;
@@ -92,10 +93,10 @@ internal static class UiTheme
 
     public static void StyleBadge(Label label, Color background, Color foreground)
     {
-        // Строгий интерфейс: никаких "таблеток" и скруглений. Цвет передаёт только текст/индикатор.
+        // Business Blue: прямоугольный статусный блок без скруглений, с мягкой статусной подложкой.
         label.Region?.Dispose();
         label.Region = null;
-        label.BackColor = Surface;
+        label.BackColor = background;
         label.ForeColor = foreground;
         label.Font = new Font("Segoe UI Semibold", 7.6F);
         label.TextAlign = ContentAlignment.MiddleCenter;
@@ -135,7 +136,8 @@ internal static class UiTheme
                     richTextBox.ForeColor = TextPrimary;
                     break;
                 case ComboBox combo:
-                    combo.FlatStyle = FlatStyle.Flat;
+                    // Геометрия и стиль ComboBox задаются на форме в Designer.
+                    // Здесь остаются только цвета темы, чтобы поле не теряло рамку.
                     combo.BackColor = InputBackground;
                     combo.ForeColor = TextPrimary;
                     break;
@@ -206,10 +208,10 @@ internal static class UiTheme
         button.FlatAppearance.BorderSize = borderSize;
         button.FlatAppearance.BorderColor = border;
         button.FlatAppearance.MouseOverBackColor = background == Surface
-            ? SurfaceAlt
-            : Blend(background, Color.White, 0.12);
+            ? AccentSoft
+            : Blend(background, Color.White, 0.10);
         button.FlatAppearance.MouseDownBackColor = background == Surface
-            ? Blend(SurfaceAlt, Color.Black, 0.04)
+            ? Blend(AccentSoft, Accent, 0.10)
             : Blend(background, Color.Black, 0.10);
         button.BackColor = background;
         button.ForeColor = foreground;
@@ -217,6 +219,7 @@ internal static class UiTheme
         button.Font = new Font("Segoe UI Semibold", 8F);
         button.Padding = new Padding(3, 0, 3, 0);
         button.UseVisualStyleBackColor = false;
+
     }
 
     private static void StyleTabControl(TabControl tabControl)
@@ -239,6 +242,11 @@ internal static class UiTheme
         using var border = new Pen(Border);
         e.Graphics.FillRectangle(back, bounds);
         e.Graphics.DrawRectangle(border, bounds.X, bounds.Y, Math.Max(0, bounds.Width - 1), Math.Max(0, bounds.Height - 1));
+        if (selected)
+        {
+            using var accent = new SolidBrush(Accent);
+            e.Graphics.FillRectangle(accent, bounds.X + 1, bounds.Bottom - 3, Math.Max(0, bounds.Width - 2), 3);
+        }
         TextRenderer.DrawText(
             e.Graphics,
             tabs.TabPages[e.Index].Text,

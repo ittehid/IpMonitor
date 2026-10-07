@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Media;
 using IpMonitor.Models;
 using IpMonitor.Storage;
@@ -9,11 +9,18 @@ namespace IpMonitor;
 public partial class SettingsForm : Form
 {
     public AppSettings? Settings { get; private set; }
-    private readonly HostSortMode _sourceSortMode;
+    private HostSortMode _sourceSortMode;
 
-    public SettingsForm(AppSettings source)
+    // Пустой конструктор нужен Visual Studio Designer.
+    // Все визуальные элементы объявлены в SettingsForm.Designer.cs.
+    public SettingsForm()
     {
         InitializeComponent();
+    }
+
+    public SettingsForm(AppSettings source)
+        : this()
+    {
         _sourceSortMode = source.HostSortMode;
         ApplyThemeStyles();
 

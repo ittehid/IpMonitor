@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace IpMonitor;
 
@@ -57,7 +57,6 @@ partial class HostForm
     private NumericUpDown nudLatencyChecks;
     private Label lblLatencyChecksUnit;
     private Panel pnlBottom;
-    private FlowLayoutPanel flpBottomButtons;
     private Button btnCancel;
     private Button btnSave;
 
@@ -69,7 +68,6 @@ partial class HostForm
 
     private void InitializeComponent()
     {
-        components = new Container();
         tlpRoot = new TableLayoutPanel();
         pnlContent = new Panel();
         tlpMain = new TableLayoutPanel();
@@ -122,7 +120,6 @@ partial class HostForm
         nudLatencyChecks = new NumericUpDown();
         lblLatencyChecksUnit = new Label();
         pnlBottom = new Panel();
-        flpBottomButtons = new FlowLayoutPanel();
         btnCancel = new Button();
         btnSave = new Button();
         tlpRoot.SuspendLayout();
@@ -145,7 +142,6 @@ partial class HostForm
         ((ISupportInitialize)nudLatencyThreshold).BeginInit();
         ((ISupportInitialize)nudLatencyChecks).BeginInit();
         pnlBottom.SuspendLayout();
-        flpBottomButtons.SuspendLayout();
         SuspendLayout();
         // 
         // tlpRoot
@@ -160,20 +156,20 @@ partial class HostForm
         tlpRoot.Name = "tlpRoot";
         tlpRoot.RowCount = 2;
         tlpRoot.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-        tlpRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
-        tlpRoot.Size = new Size(400, 500);
+        tlpRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 84F));
+        tlpRoot.Size = new Size(858, 875);
         tlpRoot.TabIndex = 0;
         // 
         // pnlContent
         // 
         pnlContent.AutoScroll = true;
-        pnlContent.BackColor = Color.FromArgb(244, 245, 249);
+        pnlContent.BackColor = Color.FromArgb(243, 245, 247);
         pnlContent.Controls.Add(tlpMain);
         pnlContent.Dock = DockStyle.Fill;
         pnlContent.Location = new Point(0, 0);
         pnlContent.Margin = new Padding(0);
         pnlContent.Name = "pnlContent";
-        pnlContent.Size = new Size(400, 452);
+        pnlContent.Size = new Size(858, 791);
         pnlContent.TabIndex = 0;
         // 
         // tlpMain
@@ -197,30 +193,30 @@ partial class HostForm
         tlpMain.Location = new Point(0, 0);
         tlpMain.Margin = new Padding(0);
         tlpMain.Name = "tlpMain";
-        tlpMain.Padding = new Padding(14, 10, 14, 12);
+        tlpMain.Padding = new Padding(24, 18, 24, 21);
         tlpMain.RowCount = 11;
-        tlpMain.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpMain.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpMain.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpMain.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpMain.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpMain.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpMain.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpMain.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpMain.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpMain.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpMain.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpMain.Size = new Size(400, 790);
+        tlpMain.RowStyles.Add(new RowStyle());
+        tlpMain.RowStyles.Add(new RowStyle());
+        tlpMain.RowStyles.Add(new RowStyle());
+        tlpMain.RowStyles.Add(new RowStyle());
+        tlpMain.RowStyles.Add(new RowStyle());
+        tlpMain.RowStyles.Add(new RowStyle());
+        tlpMain.RowStyles.Add(new RowStyle());
+        tlpMain.RowStyles.Add(new RowStyle());
+        tlpMain.RowStyles.Add(new RowStyle());
+        tlpMain.RowStyles.Add(new RowStyle());
+        tlpMain.RowStyles.Add(new RowStyle());
+        tlpMain.Size = new Size(828, 1143);
         tlpMain.TabIndex = 0;
         // 
         // lblHeader
         // 
         lblHeader.AutoSize = true;
         lblHeader.Font = new Font("Segoe UI Semibold", 11F);
-        lblHeader.Location = new Point(14, 10);
-        lblHeader.Margin = new Padding(0, 0, 0, 2);
+        lblHeader.Location = new Point(24, 18);
+        lblHeader.Margin = new Padding(0, 0, 0, 4);
         lblHeader.Name = "lblHeader";
-        lblHeader.Size = new Size(134, 20);
+        lblHeader.Size = new Size(240, 36);
         lblHeader.TabIndex = 0;
         lblHeader.Text = "Добавление хоста";
         // 
@@ -228,39 +224,39 @@ partial class HostForm
         // 
         lblHeaderHint.AutoSize = true;
         lblHeaderHint.Font = new Font("Segoe UI", 7.4F);
-        lblHeaderHint.Location = new Point(14, 32);
-        lblHeaderHint.Margin = new Padding(0, 0, 0, 9);
+        lblHeaderHint.Location = new Point(24, 58);
+        lblHeaderHint.Margin = new Padding(0, 0, 0, 16);
         lblHeaderHint.Name = "lblHeaderHint";
-        lblHeaderHint.Size = new Size(199, 13);
+        lblHeaderHint.Size = new Size(339, 25);
         lblHeaderHint.TabIndex = 1;
         lblHeaderHint.Text = "Достаточно названия и IP / DNS-имени.";
         // 
         // lblName
         // 
         lblName.AutoSize = true;
-        lblName.Location = new Point(14, 54);
-        lblName.Margin = new Padding(0, 0, 0, 3);
+        lblName.Location = new Point(24, 99);
+        lblName.Margin = new Padding(0, 0, 0, 5);
         lblName.Name = "lblName";
-        lblName.Size = new Size(59, 15);
+        lblName.Size = new Size(105, 30);
         lblName.TabIndex = 2;
         lblName.Text = "Название";
         // 
         // txtName
         // 
         txtName.Dock = DockStyle.Fill;
-        txtName.Location = new Point(14, 72);
-        txtName.Margin = new Padding(0, 0, 0, 9);
+        txtName.Location = new Point(24, 134);
+        txtName.Margin = new Padding(0, 0, 0, 16);
         txtName.Name = "txtName";
-        txtName.Size = new Size(372, 23);
+        txtName.Size = new Size(780, 35);
         txtName.TabIndex = 3;
         // 
         // lblAddress
         // 
         lblAddress.AutoSize = true;
-        lblAddress.Location = new Point(14, 104);
-        lblAddress.Margin = new Padding(0, 0, 0, 3);
+        lblAddress.Location = new Point(24, 185);
+        lblAddress.Margin = new Padding(0, 0, 0, 5);
         lblAddress.Name = "lblAddress";
-        lblAddress.Size = new Size(140, 15);
+        lblAddress.Size = new Size(229, 30);
         lblAddress.TabIndex = 4;
         lblAddress.Text = "IP-адрес или DNS-имя";
         // 
@@ -273,23 +269,24 @@ partial class HostForm
         tlpAddress.Controls.Add(txtAddress, 0, 0);
         tlpAddress.Controls.Add(flpTest, 0, 1);
         tlpAddress.Dock = DockStyle.Fill;
-        tlpAddress.Location = new Point(14, 122);
-        tlpAddress.Margin = new Padding(0, 0, 0, 4);
+        tlpAddress.Location = new Point(24, 220);
+        tlpAddress.Margin = new Padding(0, 0, 0, 7);
         tlpAddress.Name = "tlpAddress";
         tlpAddress.RowCount = 2;
-        tlpAddress.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpAddress.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpAddress.Size = new Size(372, 60);
+        tlpAddress.RowStyles.Add(new RowStyle());
+        tlpAddress.RowStyles.Add(new RowStyle());
+        tlpAddress.Size = new Size(780, 96);
         tlpAddress.TabIndex = 5;
         // 
         // txtAddress
         // 
         txtAddress.Dock = DockStyle.Fill;
         txtAddress.Location = new Point(0, 0);
-        txtAddress.Margin = new Padding(0, 0, 0, 6);
+        txtAddress.Margin = new Padding(0, 0, 0, 10);
         txtAddress.Name = "txtAddress";
-        txtAddress.Size = new Size(372, 23);
+        txtAddress.Size = new Size(780, 35);
         txtAddress.TabIndex = 0;
+        txtAddress.TextChanged += txtAddress_TextChanged;
         // 
         // flpTest
         // 
@@ -297,24 +294,19 @@ partial class HostForm
         flpTest.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         flpTest.Controls.Add(btnTest);
         flpTest.Dock = DockStyle.Fill;
-        flpTest.FlowDirection = FlowDirection.LeftToRight;
-        flpTest.Location = new Point(0, 29);
+        flpTest.Location = new Point(0, 45);
         flpTest.Margin = new Padding(0);
         flpTest.Name = "flpTest";
-        flpTest.Size = new Size(372, 31);
+        flpTest.Size = new Size(780, 51);
         flpTest.TabIndex = 1;
         flpTest.WrapContents = false;
         // 
         // btnTest
         // 
-        btnTest.AutoSize = true;
-        btnTest.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         btnTest.Location = new Point(0, 0);
         btnTest.Margin = new Padding(0);
-        btnTest.MinimumSize = new Size(88, 29);
         btnTest.Name = "btnTest";
-        btnTest.Padding = new Padding(7, 0, 7, 0);
-        btnTest.Size = new Size(88, 29);
+        btnTest.Size = new Size(182, 51);
         btnTest.TabIndex = 0;
         btnTest.Text = "Проверить";
         btnTest.UseVisualStyleBackColor = true;
@@ -324,10 +316,10 @@ partial class HostForm
         // 
         lblTestResult.AutoSize = true;
         lblTestResult.Font = new Font("Segoe UI", 7.4F);
-        lblTestResult.Location = new Point(14, 186);
-        lblTestResult.Margin = new Padding(0, 0, 0, 8);
+        lblTestResult.Location = new Point(24, 323);
+        lblTestResult.Margin = new Padding(0, 0, 0, 14);
         lblTestResult.Name = "lblTestResult";
-        lblTestResult.Size = new Size(151, 13);
+        lblTestResult.Size = new Size(269, 25);
         lblTestResult.TabIndex = 6;
         lblTestResult.Text = "Проверка ещё не выполнялась";
         // 
@@ -337,18 +329,18 @@ partial class HostForm
         tlpState.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         tlpState.ColumnCount = 3;
         tlpState.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 42F));
-        tlpState.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+        tlpState.ColumnStyles.Add(new ColumnStyle());
         tlpState.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 58F));
         tlpState.Controls.Add(chkEnabled, 0, 0);
         tlpState.Controls.Add(lblGroup, 1, 0);
         tlpState.Controls.Add(cboGroup, 2, 0);
         tlpState.Dock = DockStyle.Fill;
-        tlpState.Location = new Point(14, 207);
-        tlpState.Margin = new Padding(0, 0, 0, 8);
+        tlpState.Location = new Point(24, 362);
+        tlpState.Margin = new Padding(0, 0, 0, 14);
         tlpState.Name = "tlpState";
         tlpState.RowCount = 1;
-        tlpState.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpState.Size = new Size(372, 25);
+        tlpState.RowStyles.Add(new RowStyle());
+        tlpState.Size = new Size(780, 38);
         tlpState.TabIndex = 7;
         // 
         // chkEnabled
@@ -360,7 +352,7 @@ partial class HostForm
         chkEnabled.Location = new Point(0, 0);
         chkEnabled.Margin = new Padding(0);
         chkEnabled.Name = "chkEnabled";
-        chkEnabled.Size = new Size(124, 25);
+        chkEnabled.Size = new Size(283, 38);
         chkEnabled.TabIndex = 0;
         chkEnabled.Text = "Мониторинг";
         chkEnabled.UseVisualStyleBackColor = true;
@@ -369,10 +361,10 @@ partial class HostForm
         // 
         lblGroup.AutoSize = true;
         lblGroup.Dock = DockStyle.Fill;
-        lblGroup.Location = new Point(132, 0);
-        lblGroup.Margin = new Padding(8, 0, 4, 0);
+        lblGroup.Location = new Point(297, 0);
+        lblGroup.Margin = new Padding(14, 0, 7, 0);
         lblGroup.Name = "lblGroup";
-        lblGroup.Size = new Size(48, 25);
+        lblGroup.Size = new Size(85, 38);
         lblGroup.TabIndex = 1;
         lblGroup.Text = "Группа:";
         lblGroup.TextAlign = ContentAlignment.MiddleRight;
@@ -380,12 +372,13 @@ partial class HostForm
         // cboGroup
         // 
         cboGroup.Dock = DockStyle.Fill;
+        cboGroup.FlatStyle = FlatStyle.Standard;
         cboGroup.FormattingEnabled = true;
-        cboGroup.Location = new Point(184, 0);
+        cboGroup.Location = new Point(389, 0);
         cboGroup.Margin = new Padding(0);
         cboGroup.MaxLength = 60;
         cboGroup.Name = "cboGroup";
-        cboGroup.Size = new Size(188, 23);
+        cboGroup.Size = new Size(391, 38);
         cboGroup.TabIndex = 2;
         // 
         // grpAccess
@@ -394,11 +387,11 @@ partial class HostForm
         grpAccess.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         grpAccess.Controls.Add(tlpAccess);
         grpAccess.Dock = DockStyle.Fill;
-        grpAccess.Location = new Point(14, 240);
-        grpAccess.Margin = new Padding(0, 0, 0, 8);
+        grpAccess.Location = new Point(24, 414);
+        grpAccess.Margin = new Padding(0, 0, 0, 14);
         grpAccess.Name = "grpAccess";
-        grpAccess.Padding = new Padding(8, 6, 8, 8);
-        grpAccess.Size = new Size(372, 118);
+        grpAccess.Padding = new Padding(14, 10, 14, 14);
+        grpAccess.Size = new Size(780, 194);
         grpAccess.TabIndex = 8;
         grpAccess.TabStop = false;
         grpAccess.Text = "Быстрый доступ";
@@ -413,14 +406,14 @@ partial class HostForm
         tlpAccess.Controls.Add(tlpWeb, 0, 1);
         tlpAccess.Controls.Add(flpRdp, 0, 2);
         tlpAccess.Dock = DockStyle.Top;
-        tlpAccess.Location = new Point(8, 22);
+        tlpAccess.Location = new Point(14, 38);
         tlpAccess.Margin = new Padding(0);
         tlpAccess.Name = "tlpAccess";
         tlpAccess.RowCount = 3;
-        tlpAccess.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpAccess.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpAccess.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpAccess.Size = new Size(356, 86);
+        tlpAccess.RowStyles.Add(new RowStyle());
+        tlpAccess.RowStyles.Add(new RowStyle());
+        tlpAccess.RowStyles.Add(new RowStyle());
+        tlpAccess.Size = new Size(752, 142);
         tlpAccess.TabIndex = 0;
         // 
         // lblWeb
@@ -428,9 +421,9 @@ partial class HostForm
         lblWeb.AutoSize = true;
         lblWeb.Font = new Font("Segoe UI", 7.3F);
         lblWeb.Location = new Point(0, 0);
-        lblWeb.Margin = new Padding(0, 0, 0, 3);
+        lblWeb.Margin = new Padding(0, 0, 0, 5);
         lblWeb.Name = "lblWeb";
-        lblWeb.Size = new Size(125, 13);
+        lblWeb.Size = new Size(215, 25);
         lblWeb.TabIndex = 0;
         lblWeb.Text = "Web (пусто = http://хост)";
         // 
@@ -440,36 +433,37 @@ partial class HostForm
         tlpWeb.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         tlpWeb.ColumnCount = 2;
         tlpWeb.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-        tlpWeb.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 82F));
+        tlpWeb.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 144F));
         tlpWeb.Controls.Add(txtWebUrl, 0, 0);
         tlpWeb.Controls.Add(btnOpenWeb, 1, 0);
         tlpWeb.Dock = DockStyle.Fill;
-        tlpWeb.Location = new Point(0, 16);
-        tlpWeb.Margin = new Padding(0, 0, 0, 6);
+        tlpWeb.Location = new Point(0, 30);
+        tlpWeb.Margin = new Padding(0, 0, 0, 10);
         tlpWeb.Name = "tlpWeb";
         tlpWeb.RowCount = 1;
-        tlpWeb.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        tlpWeb.Size = new Size(356, 29);
+        tlpWeb.RowStyles.Add(new RowStyle());
+        tlpWeb.Size = new Size(752, 61);
         tlpWeb.TabIndex = 1;
         // 
         // txtWebUrl
         // 
         txtWebUrl.Dock = DockStyle.Fill;
         txtWebUrl.Location = new Point(0, 0);
-        txtWebUrl.Margin = new Padding(0, 0, 7, 0);
+        txtWebUrl.Margin = new Padding(0, 0, 12, 0);
         txtWebUrl.Name = "txtWebUrl";
-        txtWebUrl.PlaceholderText = "https://10.0.99.2";
-        txtWebUrl.Size = new Size(267, 23);
+        txtWebUrl.PlaceholderText = "http://192.168.1.1";
+        txtWebUrl.Size = new Size(596, 35);
         txtWebUrl.TabIndex = 0;
+        txtWebUrl.TextChanged += txtWebUrl_TextChanged;
         // 
         // btnOpenWeb
         // 
         btnOpenWeb.Dock = DockStyle.Fill;
-        btnOpenWeb.Location = new Point(274, 0);
+        btnOpenWeb.Location = new Point(608, 0);
         btnOpenWeb.Margin = new Padding(0);
-        btnOpenWeb.MinimumSize = new Size(0, 27);
+        btnOpenWeb.MinimumSize = new Size(0, 47);
         btnOpenWeb.Name = "btnOpenWeb";
-        btnOpenWeb.Size = new Size(82, 29);
+        btnOpenWeb.Size = new Size(144, 61);
         btnOpenWeb.TabIndex = 1;
         btnOpenWeb.Text = "Открыть";
         btnOpenWeb.UseVisualStyleBackColor = true;
@@ -483,21 +477,20 @@ partial class HostForm
         flpRdp.Controls.Add(lblRdpPort);
         flpRdp.Controls.Add(nudRdpPort);
         flpRdp.Dock = DockStyle.Fill;
-        flpRdp.FlowDirection = FlowDirection.LeftToRight;
-        flpRdp.Location = new Point(0, 51);
+        flpRdp.Location = new Point(0, 101);
         flpRdp.Margin = new Padding(0);
         flpRdp.Name = "flpRdp";
-        flpRdp.Size = new Size(356, 35);
+        flpRdp.Size = new Size(752, 41);
         flpRdp.TabIndex = 2;
         flpRdp.WrapContents = false;
         // 
         // chkRdpEnabled
         // 
         chkRdpEnabled.AutoSize = true;
-        chkRdpEnabled.Location = new Point(0, 4);
-        chkRdpEnabled.Margin = new Padding(0, 4, 14, 0);
+        chkRdpEnabled.Location = new Point(0, 7);
+        chkRdpEnabled.Margin = new Padding(0, 7, 24, 0);
         chkRdpEnabled.Name = "chkRdpEnabled";
-        chkRdpEnabled.Size = new Size(47, 19);
+        chkRdpEnabled.Size = new Size(79, 34);
         chkRdpEnabled.TabIndex = 0;
         chkRdpEnabled.Text = "RDP";
         chkRdpEnabled.UseVisualStyleBackColor = true;
@@ -506,32 +499,32 @@ partial class HostForm
         // lblRdpPort
         // 
         lblRdpPort.AutoSize = true;
-        lblRdpPort.Location = new Point(61, 6);
-        lblRdpPort.Margin = new Padding(0, 6, 5, 0);
+        lblRdpPort.Location = new Point(103, 10);
+        lblRdpPort.Margin = new Padding(0, 10, 9, 0);
         lblRdpPort.Name = "lblRdpPort";
-        lblRdpPort.Size = new Size(38, 15);
+        lblRdpPort.Size = new Size(66, 30);
         lblRdpPort.TabIndex = 1;
         lblRdpPort.Text = "Порт:";
         // 
         // nudRdpPort
         // 
-        nudRdpPort.Location = new Point(104, 0);
+        nudRdpPort.Location = new Point(178, 0);
         nudRdpPort.Margin = new Padding(0);
         nudRdpPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
         nudRdpPort.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
         nudRdpPort.Name = "nudRdpPort";
-        nudRdpPort.Size = new Size(72, 23);
+        nudRdpPort.Size = new Size(126, 35);
         nudRdpPort.TabIndex = 2;
         nudRdpPort.Value = new decimal(new int[] { 3389, 0, 0, 0 });
         // 
         // btnAdvanced
         // 
         btnAdvanced.Dock = DockStyle.Fill;
-        btnAdvanced.Location = new Point(14, 366);
-        btnAdvanced.Margin = new Padding(0, 0, 0, 7);
-        btnAdvanced.MinimumSize = new Size(0, 27);
+        btnAdvanced.Location = new Point(24, 622);
+        btnAdvanced.Margin = new Padding(0, 0, 0, 12);
+        btnAdvanced.MinimumSize = new Size(0, 47);
         btnAdvanced.Name = "btnAdvanced";
-        btnAdvanced.Size = new Size(372, 27);
+        btnAdvanced.Size = new Size(780, 47);
         btnAdvanced.TabIndex = 9;
         btnAdvanced.Text = "▸ Дополнительные настройки";
         btnAdvanced.TextAlign = ContentAlignment.MiddleLeft;
@@ -540,7 +533,6 @@ partial class HostForm
         // 
         // grpAdvanced
         // 
-        grpAdvanced.AutoSize = false;
         grpAdvanced.Controls.Add(lblCheckType);
         grpAdvanced.Controls.Add(cboCheckType);
         grpAdvanced.Controls.Add(lblTcpPort);
@@ -564,53 +556,56 @@ partial class HostForm
         grpAdvanced.Controls.Add(nudLatencyChecks);
         grpAdvanced.Controls.Add(lblLatencyChecksUnit);
         grpAdvanced.Dock = DockStyle.Top;
-        grpAdvanced.Location = new Point(14, 400);
+        grpAdvanced.Location = new Point(24, 681);
         grpAdvanced.Margin = new Padding(0);
         grpAdvanced.Name = "grpAdvanced";
-        grpAdvanced.Padding = new Padding(9, 7, 9, 9);
-        grpAdvanced.Size = new Size(372, 236);
+        grpAdvanced.Padding = new Padding(16, 12, 16, 16);
+        grpAdvanced.Size = new Size(780, 441);
         grpAdvanced.TabIndex = 10;
         grpAdvanced.TabStop = false;
         grpAdvanced.Text = "Параметры проверки";
-        grpAdvanced.Visible = true;
         // 
         // lblCheckType
         // 
         lblCheckType.AutoSize = true;
-        lblCheckType.Location = new Point(18, 31);
+        lblCheckType.Location = new Point(32, 56);
+        lblCheckType.Margin = new Padding(5, 0, 5, 0);
         lblCheckType.Name = "lblCheckType";
-        lblCheckType.Size = new Size(45, 15);
+        lblCheckType.Size = new Size(80, 30);
         lblCheckType.TabIndex = 0;
         lblCheckType.Text = "Метод:";
         // 
         // cboCheckType
         // 
         cboCheckType.DropDownStyle = ComboBoxStyle.DropDownList;
+        cboCheckType.FlatStyle = FlatStyle.Standard;
         cboCheckType.FormattingEnabled = true;
         cboCheckType.Items.AddRange(new object[] { "Ping (ICMP)", "TCP-порт" });
-        cboCheckType.Location = new Point(87, 27);
+        cboCheckType.Location = new Point(122, 53);
+        cboCheckType.Margin = new Padding(5, 5, 5, 5);
         cboCheckType.Name = "cboCheckType";
-        cboCheckType.Size = new Size(120, 23);
+        cboCheckType.Size = new Size(224, 38);
         cboCheckType.TabIndex = 1;
-        cboCheckType.SelectedIndex = 0;
         cboCheckType.SelectedIndexChanged += cboCheckType_SelectedIndexChanged;
         // 
         // lblTcpPort
         // 
         lblTcpPort.AutoSize = true;
-        lblTcpPort.Location = new Point(219, 31);
+        lblTcpPort.Location = new Point(389, 56);
+        lblTcpPort.Margin = new Padding(5, 0, 5, 0);
         lblTcpPort.Name = "lblTcpPort";
-        lblTcpPort.Size = new Size(58, 15);
+        lblTcpPort.Size = new Size(106, 30);
         lblTcpPort.TabIndex = 2;
         lblTcpPort.Text = "TCP-порт:";
         // 
         // nudTcpPort
         // 
-        nudTcpPort.Location = new Point(288, 27);
+        nudTcpPort.Location = new Point(505, 54);
+        nudTcpPort.Margin = new Padding(5, 5, 5, 5);
         nudTcpPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
         nudTcpPort.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
         nudTcpPort.Name = "nudTcpPort";
-        nudTcpPort.Size = new Size(66, 23);
+        nudTcpPort.Size = new Size(144, 35);
         nudTcpPort.TabIndex = 3;
         nudTcpPort.Value = new decimal(new int[] { 443, 0, 0, 0 });
         // 
@@ -619,9 +614,10 @@ partial class HostForm
         chkUseGlobal.AutoSize = true;
         chkUseGlobal.Checked = true;
         chkUseGlobal.CheckState = CheckState.Checked;
-        chkUseGlobal.Location = new Point(18, 65);
+        chkUseGlobal.Location = new Point(32, 119);
+        chkUseGlobal.Margin = new Padding(5, 5, 5, 5);
         chkUseGlobal.Name = "chkUseGlobal";
-        chkUseGlobal.Size = new Size(194, 19);
+        chkUseGlobal.Size = new Size(358, 34);
         chkUseGlobal.TabIndex = 4;
         chkUseGlobal.Text = "Использовать общие параметры";
         chkUseGlobal.UseVisualStyleBackColor = true;
@@ -630,95 +626,105 @@ partial class HostForm
         // lblInterval
         // 
         lblInterval.AutoSize = true;
-        lblInterval.Location = new Point(18, 101);
+        lblInterval.Location = new Point(32, 189);
+        lblInterval.Margin = new Padding(5, 0, 5, 0);
         lblInterval.Name = "lblInterval";
-        lblInterval.Size = new Size(62, 15);
+        lblInterval.Size = new Size(111, 30);
         lblInterval.TabIndex = 5;
         lblInterval.Text = "Интервал:";
         // 
         // nudInterval
         // 
-        nudInterval.Location = new Point(87, 97);
+        nudInterval.Location = new Point(210, 182);
+        nudInterval.Margin = new Padding(5, 5, 5, 5);
         nudInterval.Maximum = new decimal(new int[] { 3600, 0, 0, 0 });
         nudInterval.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
         nudInterval.Name = "nudInterval";
-        nudInterval.Size = new Size(58, 23);
+        nudInterval.Size = new Size(122, 35);
         nudInterval.TabIndex = 6;
         nudInterval.Value = new decimal(new int[] { 5, 0, 0, 0 });
         // 
         // lblIntervalUnit
         // 
         lblIntervalUnit.AutoSize = true;
-        lblIntervalUnit.Location = new Point(151, 101);
+        lblIntervalUnit.Location = new Point(342, 187);
+        lblIntervalUnit.Margin = new Padding(5, 0, 5, 0);
         lblIntervalUnit.Name = "lblIntervalUnit";
-        lblIntervalUnit.Size = new Size(13, 15);
+        lblIntervalUnit.Size = new Size(23, 30);
         lblIntervalUnit.TabIndex = 7;
         lblIntervalUnit.Text = "с";
         // 
         // lblTimeout
         // 
         lblTimeout.AutoSize = true;
-        lblTimeout.Location = new Point(219, 101);
+        lblTimeout.Location = new Point(410, 187);
+        lblTimeout.Margin = new Padding(5, 0, 5, 0);
         lblTimeout.Name = "lblTimeout";
-        lblTimeout.Size = new Size(54, 15);
+        lblTimeout.Size = new Size(94, 30);
         lblTimeout.TabIndex = 8;
         lblTimeout.Text = "Timeout:";
         // 
         // nudTimeout
         // 
         nudTimeout.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-        nudTimeout.Location = new Point(288, 97);
+        nudTimeout.Location = new Point(547, 187);
+        nudTimeout.Margin = new Padding(5, 5, 5, 5);
         nudTimeout.Maximum = new decimal(new int[] { 30000, 0, 0, 0 });
         nudTimeout.Minimum = new decimal(new int[] { 100, 0, 0, 0 });
         nudTimeout.Name = "nudTimeout";
-        nudTimeout.Size = new Size(66, 23);
+        nudTimeout.Size = new Size(144, 35);
         nudTimeout.TabIndex = 9;
         nudTimeout.Value = new decimal(new int[] { 1000, 0, 0, 0 });
         // 
         // lblTimeoutUnit
         // 
         lblTimeoutUnit.AutoSize = true;
-        lblTimeoutUnit.Location = new Point(356, 101);
+        lblTimeoutUnit.Location = new Point(701, 189);
+        lblTimeoutUnit.Margin = new Padding(5, 0, 5, 0);
         lblTimeoutUnit.Name = "lblTimeoutUnit";
-        lblTimeoutUnit.Size = new Size(22, 15);
+        lblTimeoutUnit.Size = new Size(38, 30);
         lblTimeoutUnit.TabIndex = 10;
         lblTimeoutUnit.Text = "мс";
         // 
         // lblFailures
         // 
         lblFailures.AutoSize = true;
-        lblFailures.Location = new Point(18, 134);
+        lblFailures.Location = new Point(32, 254);
+        lblFailures.Margin = new Padding(5, 0, 5, 0);
         lblFailures.Name = "lblFailures";
-        lblFailures.Size = new Size(85, 15);
+        lblFailures.Size = new Size(143, 30);
         lblFailures.TabIndex = 11;
         lblFailures.Text = "Offline после:";
         // 
         // nudFailures
         // 
-        nudFailures.Location = new Point(112, 130);
+        nudFailures.Location = new Point(210, 247);
+        nudFailures.Margin = new Padding(5, 5, 5, 5);
         nudFailures.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
         nudFailures.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
         nudFailures.Name = "nudFailures";
-        nudFailures.Size = new Size(50, 23);
+        nudFailures.Size = new Size(122, 35);
         nudFailures.TabIndex = 12;
         nudFailures.Value = new decimal(new int[] { 3, 0, 0, 0 });
         // 
         // lblSuccesses
         // 
         lblSuccesses.AutoSize = true;
-        lblSuccesses.Location = new Point(219, 134);
+        lblSuccesses.Location = new Point(410, 249);
+        lblSuccesses.Margin = new Padding(5, 0, 5, 0);
         lblSuccesses.Name = "lblSuccesses";
-        lblSuccesses.Size = new Size(83, 15);
+        lblSuccesses.Size = new Size(141, 30);
         lblSuccesses.TabIndex = 13;
         lblSuccesses.Text = "Online после:";
         // 
         // nudSuccesses
         // 
-        nudSuccesses.Location = new Point(304, 130);
+        nudSuccesses.Location = new Point(561, 247);
+        nudSuccesses.Margin = new Padding(5, 5, 5, 5);
         nudSuccesses.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
         nudSuccesses.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
         nudSuccesses.Name = "nudSuccesses";
-        nudSuccesses.Size = new Size(50, 23);
+        nudSuccesses.Size = new Size(122, 35);
         nudSuccesses.TabIndex = 14;
         nudSuccesses.Value = new decimal(new int[] { 2, 0, 0, 0 });
         // 
@@ -727,9 +733,10 @@ partial class HostForm
         chkLatencyWarning.AutoSize = true;
         chkLatencyWarning.Checked = true;
         chkLatencyWarning.CheckState = CheckState.Checked;
-        chkLatencyWarning.Location = new Point(18, 166);
+        chkLatencyWarning.Location = new Point(32, 312);
+        chkLatencyWarning.Margin = new Padding(5, 5, 5, 5);
         chkLatencyWarning.Name = "chkLatencyWarning";
-        chkLatencyWarning.Size = new Size(198, 19);
+        chkLatencyWarning.Size = new Size(332, 34);
         chkLatencyWarning.TabIndex = 15;
         chkLatencyWarning.Text = "Warning по высокой задержке";
         chkLatencyWarning.UseVisualStyleBackColor = true;
@@ -738,125 +745,111 @@ partial class HostForm
         // lblLatencyThreshold
         // 
         lblLatencyThreshold.AutoSize = true;
-        lblLatencyThreshold.Location = new Point(18, 202);
+        lblLatencyThreshold.Location = new Point(32, 382);
+        lblLatencyThreshold.Margin = new Padding(5, 0, 5, 0);
         lblLatencyThreshold.Name = "lblLatencyThreshold";
-        lblLatencyThreshold.Size = new Size(44, 15);
+        lblLatencyThreshold.Size = new Size(77, 30);
         lblLatencyThreshold.TabIndex = 16;
         lblLatencyThreshold.Text = "Порог:";
         // 
         // nudLatencyThreshold
         // 
-        nudLatencyThreshold.Location = new Point(87, 198);
+        nudLatencyThreshold.Location = new Point(119, 377);
+        nudLatencyThreshold.Margin = new Padding(5, 5, 5, 5);
         nudLatencyThreshold.Maximum = new decimal(new int[] { 60000, 0, 0, 0 });
         nudLatencyThreshold.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
         nudLatencyThreshold.Name = "nudLatencyThreshold";
-        nudLatencyThreshold.Size = new Size(58, 23);
+        nudLatencyThreshold.Size = new Size(122, 35);
         nudLatencyThreshold.TabIndex = 17;
         nudLatencyThreshold.Value = new decimal(new int[] { 100, 0, 0, 0 });
         // 
         // lblLatencyMs
         // 
         lblLatencyMs.AutoSize = true;
-        lblLatencyMs.Location = new Point(151, 202);
+        lblLatencyMs.Location = new Point(251, 379);
+        lblLatencyMs.Margin = new Padding(5, 0, 5, 0);
         lblLatencyMs.Name = "lblLatencyMs";
-        lblLatencyMs.Size = new Size(22, 15);
+        lblLatencyMs.Size = new Size(38, 30);
         lblLatencyMs.TabIndex = 18;
         lblLatencyMs.Text = "мс";
         // 
         // lblLatencyChecks
         // 
         lblLatencyChecks.AutoSize = true;
-        lblLatencyChecks.Location = new Point(219, 202);
+        lblLatencyChecks.Location = new Point(410, 379);
+        lblLatencyChecks.Margin = new Padding(5, 0, 5, 0);
         lblLatencyChecks.Name = "lblLatencyChecks";
-        lblLatencyChecks.Size = new Size(44, 15);
+        lblLatencyChecks.Size = new Size(77, 30);
         lblLatencyChecks.TabIndex = 19;
         lblLatencyChecks.Text = "После:";
         // 
         // nudLatencyChecks
         // 
-        nudLatencyChecks.Location = new Point(271, 198);
+        nudLatencyChecks.Location = new Point(496, 377);
+        nudLatencyChecks.Margin = new Padding(5, 5, 5, 5);
         nudLatencyChecks.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
         nudLatencyChecks.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
         nudLatencyChecks.Name = "nudLatencyChecks";
-        nudLatencyChecks.Size = new Size(44, 23);
+        nudLatencyChecks.Size = new Size(96, 35);
         nudLatencyChecks.TabIndex = 20;
         nudLatencyChecks.Value = new decimal(new int[] { 2, 0, 0, 0 });
         // 
         // lblLatencyChecksUnit
         // 
         lblLatencyChecksUnit.AutoSize = true;
-        lblLatencyChecksUnit.Location = new Point(321, 202);
+        lblLatencyChecksUnit.Location = new Point(602, 379);
+        lblLatencyChecksUnit.Margin = new Padding(5, 0, 5, 0);
         lblLatencyChecksUnit.Name = "lblLatencyChecksUnit";
-        lblLatencyChecksUnit.Size = new Size(58, 15);
+        lblLatencyChecksUnit.Size = new Size(105, 30);
         lblLatencyChecksUnit.TabIndex = 21;
         lblLatencyChecksUnit.Text = "проверок";
         // 
         // pnlBottom
         // 
         pnlBottom.BackColor = Color.White;
-        pnlBottom.Controls.Add(flpBottomButtons);
+        pnlBottom.Controls.Add(btnCancel);
+        pnlBottom.Controls.Add(btnSave);
         pnlBottom.Dock = DockStyle.Fill;
-        pnlBottom.Location = new Point(0, 452);
+        pnlBottom.Location = new Point(0, 791);
         pnlBottom.Margin = new Padding(0);
         pnlBottom.Name = "pnlBottom";
-        pnlBottom.Size = new Size(400, 48);
+        pnlBottom.Size = new Size(858, 84);
         pnlBottom.TabIndex = 1;
         // 
-        // flpBottomButtons
+        // btnCancel
         // 
-        flpBottomButtons.AutoSize = true;
-        flpBottomButtons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        flpBottomButtons.Controls.Add(btnSave);
-        flpBottomButtons.Controls.Add(btnCancel);
-        flpBottomButtons.Dock = DockStyle.Right;
-        flpBottomButtons.FlowDirection = FlowDirection.RightToLeft;
-        flpBottomButtons.Location = new Point(209, 0);
-        flpBottomButtons.Margin = new Padding(0);
-        flpBottomButtons.Name = "flpBottomButtons";
-        flpBottomButtons.Padding = new Padding(0, 8, 12, 0);
-        flpBottomButtons.Size = new Size(191, 48);
-        flpBottomButtons.TabIndex = 0;
-        flpBottomButtons.WrapContents = false;
+        btnCancel.DialogResult = DialogResult.Cancel;
+        btnCancel.Location = new Point(448, 16);
+        btnCancel.Margin = new Padding(5, 5, 5, 5);
+        btnCancel.Name = "btnCancel";
+        btnCancel.Size = new Size(168, 52);
+        btnCancel.TabIndex = 1;
+        btnCancel.Text = "Отмена";
+        btnCancel.UseVisualStyleBackColor = true;
         // 
         // btnSave
         // 
-        btnSave.AutoSize = true;
-        btnSave.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        btnSave.Location = new Point(95, 8);
-        btnSave.Margin = new Padding(0, 0, 7, 0);
-        btnSave.MinimumSize = new Size(84, 30);
+        btnSave.Location = new Point(634, 16);
+        btnSave.Margin = new Padding(5, 5, 5, 5);
         btnSave.Name = "btnSave";
-        btnSave.Padding = new Padding(7, 0, 7, 0);
-        btnSave.Size = new Size(84, 30);
+        btnSave.Size = new Size(203, 52);
         btnSave.TabIndex = 0;
         btnSave.Text = "Сохранить";
         btnSave.UseVisualStyleBackColor = true;
         btnSave.Click += btnSave_Click;
         // 
-        // btnCancel
-        // 
-        btnCancel.AutoSize = true;
-        btnCancel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        btnCancel.DialogResult = DialogResult.Cancel;
-        btnCancel.Location = new Point(15, 8);
-        btnCancel.Margin = new Padding(0);
-        btnCancel.MinimumSize = new Size(72, 30);
-        btnCancel.Name = "btnCancel";
-        btnCancel.Padding = new Padding(7, 0, 7, 0);
-        btnCancel.Size = new Size(72, 30);
-        btnCancel.TabIndex = 1;
-        btnCancel.Text = "Отмена";
-        btnCancel.UseVisualStyleBackColor = true;
-        // 
         // HostForm
         // 
         AcceptButton = btnSave;
-        AutoScaleDimensions = new SizeF(7F, 15F);
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleDimensions = new SizeF(168F, 168F);
+        AutoScaleMode = AutoScaleMode.Dpi;
+        BackColor = Color.FromArgb(243, 245, 247);
         CancelButton = btnCancel;
-        ClientSize = new Size(400, 500);
+        ClientSize = new Size(858, 875);
         Controls.Add(tlpRoot);
+        ForeColor = Color.FromArgb(31, 41, 55);
         FormBorderStyle = FormBorderStyle.FixedDialog;
+        Margin = new Padding(5, 5, 5, 5);
         MaximizeBox = false;
         MinimizeBox = false;
         Name = "HostForm";
@@ -871,7 +864,6 @@ partial class HostForm
         tlpAddress.ResumeLayout(false);
         tlpAddress.PerformLayout();
         flpTest.ResumeLayout(false);
-        flpTest.PerformLayout();
         tlpState.ResumeLayout(false);
         tlpState.PerformLayout();
         grpAccess.ResumeLayout(false);
@@ -893,9 +885,6 @@ partial class HostForm
         ((ISupportInitialize)nudLatencyThreshold).EndInit();
         ((ISupportInitialize)nudLatencyChecks).EndInit();
         pnlBottom.ResumeLayout(false);
-        pnlBottom.PerformLayout();
-        flpBottomButtons.ResumeLayout(false);
-        flpBottomButtons.PerformLayout();
         ResumeLayout(false);
     }
 }

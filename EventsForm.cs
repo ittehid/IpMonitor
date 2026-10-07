@@ -1,4 +1,4 @@
-using IpMonitor.Models;
+﻿using IpMonitor.Models;
 using IpMonitor.Storage;
 using IpMonitor.UI;
 
@@ -6,9 +6,9 @@ namespace IpMonitor;
 
 public partial class EventsForm : Form
 {
-    private readonly EventRepository _repository;
-    private readonly List<MonitorHost> _hosts;
-    private readonly Guid? _initialHostId;
+    private EventRepository _repository = new();
+    private List<MonitorHost> _hosts = [];
+    private Guid? _initialHostId;
     private List<OutageRecord> _allOutages = [];
     private List<OutageRecord> _visibleOutages = [];
 
@@ -17,9 +17,16 @@ public partial class EventsForm : Form
         public override string ToString() => Name;
     }
 
-    internal EventsForm(EventRepository repository, IEnumerable<MonitorHost> hosts, Guid? initialHostId = null)
+    // Пустой конструктор нужен Visual Studio Designer.
+    // На форме находятся все визуальные элементы; здесь нет создания UI-контролов.
+    public EventsForm()
     {
         InitializeComponent();
+    }
+
+    internal EventsForm(EventRepository repository, IEnumerable<MonitorHost> hosts, Guid? initialHostId = null)
+        : this()
+    {
         _repository = repository;
         _hosts = hosts.OrderBy(x => x.Name).ToList();
         _initialHostId = initialHostId;
@@ -28,14 +35,13 @@ public partial class EventsForm : Form
         UiTheme.StyleGrid(dgvEvents);
         UiTheme.StyleSecondaryButton(btnRefresh);
         UiTheme.StyleSecondaryButton(btnExport);
+        UiTheme.StyleDangerButton(btnDelete);
         UiTheme.StyleDangerButton(btnClear);
         UiTheme.StyleSecondaryButton(btnClose);
         lblHeaderHint.ForeColor = UiTheme.TextMuted;
         pnlFilters.BackColor = UiTheme.Surface;
         pnlBottom.BackColor = UiTheme.Surface;
 
-        cboPeriod.Items.AddRange(new object[] { "24 часа", "7 дней", "30 дней", "Всё время" });
-        cboType.Items.AddRange(new object[] { "Все записи", "Нет связи сейчас", "Восстановлено" });
         cboHost.Items.Add(new HostFilter(null, "Все хосты"));
         foreach (var host in _hosts)
             cboHost.Items.Add(new HostFilter(host.Id, host.Name));
@@ -50,6 +56,7 @@ public partial class EventsForm : Form
         Resize += (_, _) => ResizeEventColumns();
         Shown += (_, _) => ResizeEventColumns();
         durationTimer.Start();
+        UpdateDeleteButton();
     }
 
     private void ReloadEvents()
@@ -114,6 +121,7 @@ public partial class EventsForm : Form
         }
 
         UpdateCount();
+        UpdateDeleteButton();
         ResizeEventColumns();
     }
 
@@ -234,9 +242,58 @@ public partial class EventsForm : Form
         }
     }
 
+
+    private void dgvEvents_SelectionChanged(object? sender, EventArgs e) => UpdateDeleteButton();
+
+    private void UpdateDeleteButton()
+    {
+        if (dgvEvents.SelectedRows.Count == 0 || dgvEvents.SelectedRows[0].Tag is not OutageRecord item)
+        {
+            btnDelete.Enabled = false;
+            return;
+        }
+
+        // Текущий активный Offline не удаляем: иначе потеряется точное время начала падения.
+        btnDelete.Enabled = !item.IsOngoing;
+    }
+
+    private void btnDelete_Click(object? sender, EventArgs e)
+    {
+        if (dgvEvents.SelectedRows.Count == 0 || dgvEvents.SelectedRows[0].Tag is not OutageRecord item)
+        {
+            MessageBox.Show(this, "Выберите завершённую запись в журнале.", "IP Monitor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        if (item.IsOngoing)
+        {
+            MessageBox.Show(this,
+                "Текущий период без связи удалить нельзя. Он исчезнет из активных после восстановления, а затем его можно будет удалить.",
+                "IP Monitor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        var recovered = item.RecoveredAt?.LocalDateTime.ToString("dd.MM.yyyy HH:mm:ss") ?? "—";
+        var message = $"Удалить выбранный период из журнала?\n\n" +
+                      $"{item.HostName} ({item.Address})\n" +
+                      $"Потеря связи: {item.LostAt.LocalDateTime:dd.MM.yyyy HH:mm:ss}\n" +
+                      $"Восстановление: {recovered}";
+
+        if (MessageBox.Show(this, message, "IP Monitor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            return;
+
+        if (!_repository.DeleteOutage(item))
+        {
+            MessageBox.Show(this, "Не удалось удалить выбранную запись.", "IP Monitor", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        ReloadEvents();
+    }
+
     private void btnClear_Click(object? sender, EventArgs e)
     {
-        var message = "Очистить завершённую историю недоступности?\n\n" +
+        var message = "Очистить ВСЮ завершённую историю недоступности?\n\n" +
                       "Текущие хосты без связи останутся в журнале, чтобы не потерять время начала падения.";
 
         if (MessageBox.Show(this, message, "IP Monitor", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)

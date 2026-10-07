@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace IpMonitor;
 
@@ -247,19 +247,19 @@ partial class MainForm
         // toolbar buttons
         btnMonitoring.Margin = new Padding(0, 0, 5, 0);
         btnMonitoring.Name = "btnMonitoring";
-        btnMonitoring.Size = new Size(64, 26);
+        btnMonitoring.Size = new Size(76, 26);
         btnMonitoring.Text = "▶ Старт";
         btnMonitoring.Click += btnMonitoring_Click;
 
         btnAddHost.Margin = new Padding(0, 0, 5, 0);
         btnAddHost.Name = "btnAddHost";
-        btnAddHost.Size = new Size(68, 26);
+        btnAddHost.Size = new Size(84, 26);
         btnAddHost.Text = "＋ Хост ▼";
         btnAddHost.Click += btnAddHost_Click;
 
         btnEvents.Margin = new Padding(0, 0, 5, 0);
         btnEvents.Name = "btnEvents";
-        btnEvents.Size = new Size(64, 26);
+        btnEvents.Size = new Size(82, 26);
         btnEvents.Text = "Журнал";
         btnEvents.Click += btnEvents_Click;
 
@@ -299,14 +299,37 @@ partial class MainForm
         tlpSummary.RowCount = 1;
         tlpSummary.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
+        lblOnline.Dock = DockStyle.Fill;
+        lblOnline.Margin = new Padding(2, 0, 2, 0);
+        lblOnline.BackColor = Color.FromArgb(236, 253, 243);
+        lblOnline.ForeColor = Color.FromArgb(22, 163, 74);
         lblOnline.Name = "lblOnline";
+        lblOnline.Text = "● Online 0";
+        lblOnline.TextAlign = ContentAlignment.MiddleCenter;
+
+        lblWarning.Dock = DockStyle.Fill;
+        lblWarning.Margin = new Padding(2, 0, 2, 0);
+        lblWarning.BackColor = Color.FromArgb(255, 247, 230);
+        lblWarning.ForeColor = Color.FromArgb(217, 119, 6);
         lblWarning.Name = "lblWarning";
+        lblWarning.Text = "▲ Warn 0";
+        lblWarning.TextAlign = ContentAlignment.MiddleCenter;
+
+        lblOffline.Dock = DockStyle.Fill;
+        lblOffline.Margin = new Padding(2, 0, 2, 0);
+        lblOffline.BackColor = Color.FromArgb(254, 242, 242);
+        lblOffline.ForeColor = Color.FromArgb(220, 38, 38);
         lblOffline.Name = "lblOffline";
+        lblOffline.Text = "● Offline 0";
+        lblOffline.TextAlign = ContentAlignment.MiddleCenter;
+
+        lblDisabled.Dock = DockStyle.Fill;
+        lblDisabled.Margin = new Padding(2, 0, 2, 0);
+        lblDisabled.BackColor = Color.FromArgb(248, 250, 252);
+        lblDisabled.ForeColor = Color.FromArgb(107, 114, 128);
         lblDisabled.Name = "lblDisabled";
-        ConfigureBadge(lblOnline, "● Online 0");
-        ConfigureBadge(lblWarning, "▲ Warn 0");
-        ConfigureBadge(lblOffline, "● Offline 0");
-        ConfigureBadge(lblDisabled, "○ Выкл 0");
+        lblDisabled.Text = "○ Выкл 0";
+        lblDisabled.TextAlign = ContentAlignment.MiddleCenter;
 
         // pnlContent
         pnlContent.BackColor = Color.White;
@@ -402,13 +425,13 @@ partial class MainForm
 
         btnEmptyAdd.Margin = new Padding(0, 0, 5, 0);
         btnEmptyAdd.Name = "btnEmptyAdd";
-        btnEmptyAdd.Size = new Size(84, 27);
+        btnEmptyAdd.Size = new Size(94, 27);
         btnEmptyAdd.Text = "＋ Хост";
         btnEmptyAdd.Click += btnEmptyAdd_Click;
 
         btnEmptyQuickAdd.Margin = new Padding(0);
         btnEmptyQuickAdd.Name = "btnEmptyQuickAdd";
-        btnEmptyQuickAdd.Size = new Size(75, 27);
+        btnEmptyQuickAdd.Size = new Size(92, 27);
         btnEmptyQuickAdd.Text = "Списком";
         btnEmptyQuickAdd.Click += btnEmptyQuickAdd_Click;
 
@@ -538,12 +561,14 @@ partial class MainForm
         // MainForm
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
-        ClientSize = new Size(320, 330);
+        BackColor = Color.FromArgb(243, 245, 247);
+        ForeColor = Color.FromArgb(31, 41, 55);
+        ClientSize = new Size(340, 330);
         Controls.Add(pnlContent);
         Controls.Add(pnlSummary);
         Controls.Add(pnlToolbar);
         Controls.Add(statusMain);
-        MinimumSize = new Size(305, 210);
+        MinimumSize = new Size(325, 210);
         MaximizeBox = false;
         Name = "MainForm";
         StartPosition = FormStartPosition.CenterScreen;
@@ -573,11 +598,4 @@ partial class MainForm
         PerformLayout();
     }
 
-    private static void ConfigureBadge(Label label, string text)
-    {
-        label.Dock = DockStyle.Fill;
-        label.Margin = new Padding(2, 0, 2, 0);
-        label.Text = text;
-        label.TextAlign = ContentAlignment.MiddleCenter;
-    }
 }

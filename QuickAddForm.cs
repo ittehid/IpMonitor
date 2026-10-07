@@ -6,14 +6,21 @@ namespace IpMonitor;
 
 public partial class QuickAddForm : Form
 {
-    private readonly AppSettings _settings;
-    private readonly HostCheckService _checkService;
+    private AppSettings _settings = new();
+    private HostCheckService _checkService = new();
 
     public List<MonitorHost> Hosts { get; } = [];
 
-    internal QuickAddForm(AppSettings settings, HostCheckService checkService)
+    // Пустой конструктор нужен Visual Studio Designer.
+    // Все визуальные элементы объявлены в QuickAddForm.Designer.cs.
+    public QuickAddForm()
     {
         InitializeComponent();
+    }
+
+    internal QuickAddForm(AppSettings settings, HostCheckService checkService)
+        : this()
+    {
         _settings = settings;
         _checkService = checkService;
         UiTheme.Apply(this);

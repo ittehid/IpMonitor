@@ -1,10 +1,14 @@
-namespace IpMonitor.Models;
+﻿namespace IpMonitor.Models;
 
 /// <summary>
 /// Один период недоступности хоста. В журнале одна такая запись отображается одной строкой.
 /// </summary>
 public sealed class OutageRecord
 {
+    // Идентификаторы исходных технических событий нужны только для точного удаления
+    // выбранного завершённого периода из журнала.
+    public Guid OfflineEventId { get; set; }
+    public Guid RecoveryEventId { get; set; }
     public Guid HostId { get; set; }
     public string HostName { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;

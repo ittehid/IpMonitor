@@ -62,13 +62,32 @@ internal sealed class MonitoringService : IDisposable
 
     public void Stop()
     {
-        if (_cts is null)
+        var cts = _cts;
+        if (cts is null)
             return;
 
-        _cts.Cancel();
-        _cts.Dispose();
+        // Сначала запрещаем считать сервис запущенным, затем отменяем проверки
+        // и дожидаемся выхода рабочих задач. Так завершившаяся проверка уже не
+        // сможет вернуть старый Online / Offline после того, как пользователь
+        // нажал «Стоп».
+        var workers = _workers.ToArray();
         _cts = null;
         _workers = [];
+        cts.Cancel();
+
+        try
+        {
+            if (workers.Length > 0)
+                Task.WhenAll(workers).GetAwaiter().GetResult();
+        }
+        catch (OperationCanceledException)
+        {
+            // Нормальное завершение при остановке мониторинга.
+        }
+        finally
+        {
+            cts.Dispose();
+        }
     }
 
     public async Task CheckNowAsync(MonitorHost host, AppSettings settings, CancellationToken cancellationToken = default)

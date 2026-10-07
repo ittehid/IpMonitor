@@ -1,4 +1,4 @@
-using IpMonitor.Models;
+﻿using IpMonitor.Models;
 using IpMonitor.Services;
 using IpMonitor.UI;
 
@@ -13,6 +13,10 @@ public partial class HostForm : Form
     private readonly DateTimeOffset? _originalMaintenanceUntil;
     private readonly bool _originalMaintenanceIndefinite;
     private bool _advancedVisible;
+    private bool _suppressQuickAccessSync;
+    private bool _webFollowsAddress = true;
+    private string _webScheme = "http";
+    private string _lastAddress = string.Empty;
 
     public MonitorHost? Host { get; private set; }
 
@@ -34,8 +38,8 @@ public partial class HostForm : Form
         AppSettings settings,
         HostCheckService checkService,
         IEnumerable<string>? knownGroups = null)
+        : this()
     {
-        InitializeComponent();
         UiTheme.Apply(this);
         UiTheme.StylePrimaryButton(btnSave);
         UiTheme.StyleSecondaryButton(btnCancel);
@@ -52,6 +56,8 @@ public partial class HostForm : Form
         _originalSortOrder = host?.SortOrder ?? 0;
         _originalMaintenanceUntil = host?.MaintenanceUntil;
         _originalMaintenanceIndefinite = host?.MaintenanceIndefinite ?? false;
+
+        _suppressQuickAccessSync = true;
 
         foreach (var group in (knownGroups ?? []).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct(StringComparer.CurrentCultureIgnoreCase).OrderBy(x => x))
             cboGroup.Items.Add(group.Trim());
@@ -89,6 +95,16 @@ public partial class HostForm : Form
             nudLatencyThreshold.Value = Clamp(host.LatencyWarningThresholdMs, nudLatencyThreshold.Minimum, nudLatencyThreshold.Maximum);
             nudLatencyChecks.Value = Clamp(host.LatencyWarningAfterChecks, nudLatencyChecks.Minimum, nudLatencyChecks.Maximum);
         }
+
+        _lastAddress = txtAddress.Text.Trim();
+        _webScheme = GetWebScheme(txtWebUrl.Text) ?? "http";
+        _webFollowsAddress = string.IsNullOrWhiteSpace(txtWebUrl.Text) || IsWebUrlForAddress(txtWebUrl.Text, _lastAddress);
+        _suppressQuickAccessSync = false;
+
+        // Для нового хоста Web-адрес автоматически следует за адресом хоста.
+        // RDP отдельного адреса не хранит: при подключении всегда используется txtAddress/Host.Address.
+        if (host is null && !string.IsNullOrWhiteSpace(_lastAddress))
+            SyncQuickAccessFromAddress();
 
         SetAdvancedVisible(false);
         UpdateRdpControls();
@@ -181,6 +197,85 @@ public partial class HostForm : Form
         {
             btnTest.Enabled = true;
         }
+    }
+
+    private void txtAddress_TextChanged(object? sender, EventArgs e)
+    {
+        if (_suppressQuickAccessSync)
+            return;
+
+        var previousAddress = _lastAddress;
+        var currentWeb = txtWebUrl.Text.Trim();
+
+        // Если Web-поле было пустым или всё ещё указывало на прежний адрес хоста,
+        // продолжаем автоматически синхронизировать его с полем адреса.
+        if (_webFollowsAddress || string.IsNullOrWhiteSpace(currentWeb) || IsWebUrlForAddress(currentWeb, previousAddress))
+        {
+            var scheme = GetWebScheme(currentWeb) ?? _webScheme;
+            if (!string.IsNullOrWhiteSpace(scheme))
+                _webScheme = scheme;
+
+            _webFollowsAddress = true;
+            SyncQuickAccessFromAddress();
+        }
+
+        _lastAddress = txtAddress.Text.Trim();
+    }
+
+    private void txtWebUrl_TextChanged(object? sender, EventArgs e)
+    {
+        if (_suppressQuickAccessSync)
+            return;
+
+        var web = txtWebUrl.Text.Trim();
+        var scheme = GetWebScheme(web);
+        if (!string.IsNullOrWhiteSpace(scheme))
+            _webScheme = scheme;
+
+        _webFollowsAddress = string.IsNullOrWhiteSpace(web) || IsWebUrlForAddress(web, txtAddress.Text.Trim());
+    }
+
+    private void SyncQuickAccessFromAddress()
+    {
+        var address = txtAddress.Text.Trim();
+        var web = string.IsNullOrWhiteSpace(address) ? string.Empty : $"{_webScheme}://{address}";
+
+        _suppressQuickAccessSync = true;
+        try
+        {
+            txtWebUrl.Text = web;
+        }
+        finally
+        {
+            _suppressQuickAccessSync = false;
+        }
+
+        _lastAddress = address;
+    }
+
+    private static string? GetWebScheme(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        var text = value.Trim();
+        if (text.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            return "https";
+        if (text.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
+            return "http";
+        return null;
+    }
+
+    private static bool IsWebUrlForAddress(string? webUrl, string? address)
+    {
+        if (string.IsNullOrWhiteSpace(webUrl) || string.IsNullOrWhiteSpace(address))
+            return false;
+
+        var host = address.Trim().TrimEnd('/');
+        var web = webUrl.Trim().TrimEnd('/');
+
+        return string.Equals(web, $"http://{host}", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(web, $"https://{host}", StringComparison.OrdinalIgnoreCase);
     }
 
     private void btnOpenWeb_Click(object? sender, EventArgs e)

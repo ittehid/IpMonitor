@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace IpMonitor;
 
@@ -19,7 +19,6 @@ partial class QuickAddForm
     private DataGridViewTextBoxColumn colQuickResult;
     private Panel pnlBottom;
     private Label lblCount;
-    private FlowLayoutPanel flpBottomButtons;
     private Button btnCancel;
     private Button btnAdd;
 
@@ -46,7 +45,6 @@ partial class QuickAddForm
         colQuickResult = new DataGridViewTextBoxColumn();
         pnlBottom = new Panel();
         lblCount = new Label();
-        flpBottomButtons = new FlowLayoutPanel();
         btnCancel = new Button();
         btnAdd = new Button();
 
@@ -54,7 +52,6 @@ partial class QuickAddForm
         flpActions.SuspendLayout();
         ((ISupportInitialize)dgvPreview).BeginInit();
         pnlBottom.SuspendLayout();
-        flpBottomButtons.SuspendLayout();
         SuspendLayout();
 
         tlpRoot.ColumnCount = 1;
@@ -102,21 +99,15 @@ partial class QuickAddForm
         flpActions.Name = "flpActions";
         flpActions.WrapContents = false;
 
-        btnParse.AutoSize = true;
-        btnParse.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        btnParse.Margin = new Padding(0, 0, 6, 0);
-        btnParse.MinimumSize = new Size(84, 27);
+        btnParse.Margin = new Padding(0, 0, 8, 0);
         btnParse.Name = "btnParse";
-        btnParse.Padding = new Padding(5, 0, 5, 0);
+        btnParse.Size = new Size(100, 27);
         btnParse.Text = "Разобрать";
         btnParse.Click += btnParse_Click;
 
-        btnCheck.AutoSize = true;
-        btnCheck.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         btnCheck.Margin = Padding.Empty;
-        btnCheck.MinimumSize = new Size(92, 27);
         btnCheck.Name = "btnCheck";
-        btnCheck.Padding = new Padding(5, 0, 5, 0);
+        btnCheck.Size = new Size(120, 27);
         btnCheck.Text = "Проверить все";
         btnCheck.Click += btnCheck_Click;
 
@@ -152,46 +143,37 @@ partial class QuickAddForm
 
         pnlBottom.BackColor = Color.White;
         pnlBottom.Dock = DockStyle.Fill;
+        pnlBottom.Location = new Point(12, 316);
         pnlBottom.Margin = Padding.Empty;
         pnlBottom.Name = "pnlBottom";
+        pnlBottom.Size = new Size(386, 44);
+        pnlBottom.TabIndex = 5;
 
         lblCount.AutoSize = true;
         lblCount.Location = new Point(12, 14);
         lblCount.Name = "lblCount";
         lblCount.Text = "Найдено: 0";
 
-        flpBottomButtons.AutoSize = true;
-        flpBottomButtons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        flpBottomButtons.Controls.Add(btnAdd);
-        flpBottomButtons.Controls.Add(btnCancel);
-        flpBottomButtons.Dock = DockStyle.Right;
-        flpBottomButtons.FlowDirection = FlowDirection.RightToLeft;
-        flpBottomButtons.Margin = Padding.Empty;
-        flpBottomButtons.Name = "flpBottomButtons";
-        flpBottomButtons.Padding = new Padding(0, 8, 10, 0);
-        flpBottomButtons.WrapContents = false;
-
-        btnAdd.AutoSize = true;
-        btnAdd.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        btnAdd.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnAdd.Enabled = false;
-        btnAdd.Margin = new Padding(0, 0, 6, 0);
-        btnAdd.MinimumSize = new Size(82, 27);
+        btnAdd.Location = new Point(282, 8);
         btnAdd.Name = "btnAdd";
-        btnAdd.Padding = new Padding(6, 0, 6, 0);
+        btnAdd.Size = new Size(92, 29);
+        btnAdd.TabIndex = 2;
         btnAdd.Text = "Добавить";
         btnAdd.Click += btnAdd_Click;
 
-        btnCancel.AutoSize = true;
-        btnCancel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        btnCancel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnCancel.DialogResult = DialogResult.Cancel;
-        btnCancel.Margin = Padding.Empty;
-        btnCancel.MinimumSize = new Size(68, 27);
+        btnCancel.Location = new Point(178, 8);
         btnCancel.Name = "btnCancel";
-        btnCancel.Padding = new Padding(6, 0, 6, 0);
+        btnCancel.Size = new Size(94, 29);
+        btnCancel.TabIndex = 1;
         btnCancel.Text = "Отмена";
 
         pnlBottom.Controls.Add(lblCount);
-        pnlBottom.Controls.Add(flpBottomButtons);
+        pnlBottom.Controls.Add(btnCancel);
+        pnlBottom.Controls.Add(btnAdd);
 
         tlpRoot.Controls.Add(lblHeader, 0, 0);
         tlpRoot.Controls.Add(lblHint, 0, 1);
@@ -202,8 +184,10 @@ partial class QuickAddForm
 
         AcceptButton = btnAdd;
         CancelButton = btnCancel;
-        AutoScaleDimensions = new SizeF(7F, 15F);
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleDimensions = new SizeF(96F, 96F);
+        AutoScaleMode = AutoScaleMode.Dpi;
+        BackColor = Color.FromArgb(243, 245, 247);
+        ForeColor = Color.FromArgb(31, 41, 55);
         ClientSize = new Size(410, 360);
         Controls.Add(tlpRoot);
         FormBorderStyle = FormBorderStyle.SizableToolWindow;
@@ -220,8 +204,6 @@ partial class QuickAddForm
         ((ISupportInitialize)dgvPreview).EndInit();
         pnlBottom.ResumeLayout(false);
         pnlBottom.PerformLayout();
-        flpBottomButtons.ResumeLayout(false);
-        flpBottomButtons.PerformLayout();
         ResumeLayout(false);
     }
 }

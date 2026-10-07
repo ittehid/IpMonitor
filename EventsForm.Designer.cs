@@ -23,8 +23,8 @@ partial class EventsForm
     private DataGridViewTextBoxColumn colDowntime;
     private Panel pnlBottom;
     private Label lblCount;
-    private FlowLayoutPanel flpBottomButtons;
     private Button btnExport;
+    private Button btnDelete;
     private Button btnClear;
     private Button btnClose;
     private System.Windows.Forms.Timer durationTimer;
@@ -56,8 +56,8 @@ partial class EventsForm
         colDowntime = new DataGridViewTextBoxColumn();
         pnlBottom = new Panel();
         lblCount = new Label();
-        flpBottomButtons = new FlowLayoutPanel();
         btnExport = new Button();
+        btnDelete = new Button();
         btnClear = new Button();
         btnClose = new Button();
         durationTimer = new System.Windows.Forms.Timer(components);
@@ -65,7 +65,6 @@ partial class EventsForm
         pnlFilters.SuspendLayout();
         ((ISupportInitialize)dgvEvents).BeginInit();
         pnlBottom.SuspendLayout();
-        flpBottomButtons.SuspendLayout();
         SuspendLayout();
 
         lblHeader.AutoSize = true;
@@ -96,6 +95,7 @@ partial class EventsForm
         lblHostFilter.Location = new Point(9, 6);
         lblHostFilter.Text = "Хост";
 
+        cboHost.FlatStyle = FlatStyle.Standard;
         cboHost.DropDownStyle = ComboBoxStyle.DropDownList;
         cboHost.Location = new Point(9, 22);
         cboHost.Size = new Size(124, 23);
@@ -106,7 +106,9 @@ partial class EventsForm
         lblPeriod.Location = new Point(141, 6);
         lblPeriod.Text = "Период";
 
+        cboPeriod.FlatStyle = FlatStyle.Standard;
         cboPeriod.DropDownStyle = ComboBoxStyle.DropDownList;
+        cboPeriod.Items.AddRange(new object[] { "24 часа", "7 дней", "30 дней", "Всё время" });
         cboPeriod.Location = new Point(141, 22);
         cboPeriod.Size = new Size(78, 23);
         cboPeriod.SelectedIndexChanged += FilterChanged;
@@ -116,14 +118,16 @@ partial class EventsForm
         lblType.Location = new Point(227, 6);
         lblType.Text = "Статус";
 
+        cboType.FlatStyle = FlatStyle.Standard;
         cboType.DropDownStyle = ComboBoxStyle.DropDownList;
+        cboType.Items.AddRange(new object[] { "Все записи", "Нет связи сейчас", "Восстановлено" });
         cboType.Location = new Point(227, 22);
         cboType.Size = new Size(106, 23);
         cboType.SelectedIndexChanged += FilterChanged;
 
         btnRefresh.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-        btnRefresh.Location = new Point(645, 19);
-        btnRefresh.Size = new Size(76, 27);
+        btnRefresh.Location = new Point(633, 19);
+        btnRefresh.Size = new Size(100, 27);
         btnRefresh.Text = "Обновить";
         btnRefresh.Click += btnRefresh_Click;
 
@@ -141,6 +145,7 @@ partial class EventsForm
         dgvEvents.ShowCellToolTips = true;
         dgvEvents.Size = new Size(732, 254);
         dgvEvents.CellFormatting += dgvEvents_CellFormatting;
+        dgvEvents.SelectionChanged += dgvEvents_SelectionChanged;
 
         colLostAt.HeaderText = "Потеря связи";
         colLostAt.Name = "colLostAt";
@@ -169,36 +174,50 @@ partial class EventsForm
 
         pnlBottom.BackColor = Color.White;
         pnlBottom.Controls.Add(lblCount);
-        pnlBottom.Controls.Add(flpBottomButtons);
+        pnlBottom.Controls.Add(btnExport);
+        pnlBottom.Controls.Add(btnDelete);
+        pnlBottom.Controls.Add(btnClear);
+        pnlBottom.Controls.Add(btnClose);
         pnlBottom.Dock = DockStyle.Bottom;
-        pnlBottom.Height = 44;
+        pnlBottom.Location = new Point(0, 382);
+        pnlBottom.Name = "pnlBottom";
+        pnlBottom.Size = new Size(760, 48);
+        pnlBottom.TabIndex = 4;
 
         lblCount.AutoSize = true;
-        lblCount.Location = new Point(14, 14);
+        lblCount.Location = new Point(14, 16);
         lblCount.Text = "Периодов: 0";
 
-        flpBottomButtons.AutoSize = true;
-        flpBottomButtons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        flpBottomButtons.Controls.Add(btnClose);
-        flpBottomButtons.Controls.Add(btnClear);
-        flpBottomButtons.Controls.Add(btnExport);
-        flpBottomButtons.Dock = DockStyle.Right;
-        flpBottomButtons.FlowDirection = FlowDirection.RightToLeft;
-        flpBottomButtons.Padding = new Padding(0, 8, 10, 0);
-        flpBottomButtons.WrapContents = false;
-
+        btnClose.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnClose.DialogResult = DialogResult.Cancel;
-        btnClose.Margin = new Padding(0, 0, 6, 0);
-        btnClose.Size = new Size(68, 27);
+        btnClose.Location = new Point(642, 10);
+        btnClose.Name = "btnClose";
+        btnClose.Size = new Size(104, 29);
+        btnClose.TabIndex = 4;
         btnClose.Text = "Закрыть";
 
-        btnClear.Margin = new Padding(0, 0, 6, 0);
-        btnClear.Size = new Size(68, 27);
-        btnClear.Text = "Очистить";
+        btnClear.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        btnClear.Location = new Point(520, 10);
+        btnClear.Name = "btnClear";
+        btnClear.Size = new Size(112, 29);
+        btnClear.TabIndex = 3;
+        btnClear.Text = "Очистить всё";
         btnClear.Click += btnClear_Click;
 
-        btnExport.Margin = new Padding(0);
-        btnExport.Size = new Size(66, 27);
+        btnDelete.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        btnDelete.Enabled = false;
+        btnDelete.Location = new Point(392, 10);
+        btnDelete.Name = "btnDelete";
+        btnDelete.Size = new Size(118, 29);
+        btnDelete.TabIndex = 2;
+        btnDelete.Text = "Удалить";
+        btnDelete.Click += btnDelete_Click;
+
+        btnExport.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        btnExport.Location = new Point(278, 10);
+        btnExport.Name = "btnExport";
+        btnExport.Size = new Size(104, 29);
+        btnExport.TabIndex = 1;
         btnExport.Text = "Экспорт";
         btnExport.Click += btnExport_Click;
 
@@ -208,6 +227,8 @@ partial class EventsForm
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
         CancelButton = btnClose;
+        BackColor = Color.FromArgb(243, 245, 247);
+        ForeColor = Color.FromArgb(31, 41, 55);
         ClientSize = new Size(760, 430);
         Controls.Add(lblHeader);
         Controls.Add(lblHeaderHint);
@@ -225,8 +246,6 @@ partial class EventsForm
         ((ISupportInitialize)dgvEvents).EndInit();
         pnlBottom.ResumeLayout(false);
         pnlBottom.PerformLayout();
-        flpBottomButtons.ResumeLayout(false);
-        flpBottomButtons.PerformLayout();
         ResumeLayout(false);
         PerformLayout();
     }

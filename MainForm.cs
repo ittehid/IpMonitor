@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Net;
 using IpMonitor.Models;
 using IpMonitor.Services;
@@ -109,7 +109,7 @@ public partial class MainForm : Form
         dgvHosts.ColumnHeadersDefaultCellStyle.Padding = new Padding(5, 0, 5, 0);
         dgvHosts.DefaultCellStyle.Font = new Font("Segoe UI", 8.25F);
         dgvHosts.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 8.25F);
-        dgvHosts.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 250, 250);
+        dgvHosts.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
         dgvHosts.CellBorderStyle = DataGridViewCellBorderStyle.Single;
         dgvHosts.GridColor = UiTheme.Border;
 
@@ -295,8 +295,10 @@ public partial class MainForm : Form
         UpdateSummary();
     }
 
-    private static string StatusGlyph(MonitorHost host)
+    private string StatusGlyph(MonitorHost host)
     {
+        if (_monitoringService?.IsRunning != true)
+            return host.Enabled ? "•" : "○";
         if (host.IsChecking)
             return "◌";
         if (host.IsInMaintenance)
@@ -314,6 +316,8 @@ public partial class MainForm : Form
 
     private string BuildResponseText(MonitorHost host)
     {
+        if (_monitoringService?.IsRunning != true)
+            return host.Enabled ? "—" : "Отключен";
         if (host.IsChecking)
             return host.CheckType == CheckType.Ping ? "ping…" : $"tcp:{host.TcpPort}…";
 
@@ -440,8 +444,26 @@ public partial class MainForm : Form
     private void StopMonitoring()
     {
         _monitoringService?.Stop();
+
+        // После ручной остановки мониторинга не оставляем на экране
+        // последний Online / Warning / Offline. Для включённых хостов
+        // возвращаем нейтральное состояние до следующего запуска.
         foreach (var host in _hosts)
+        {
+            host.State = host.Enabled ? HostState.Unknown : HostState.Disabled;
             host.IsChecking = false;
+            host.FailureStartedAt = null;
+            host.OfflineSince = null;
+            host.ConsecutiveFailures = 0;
+            host.ConsecutiveSuccesses = 0;
+            host.ConsecutiveHighLatency = 0;
+            host.IsLatencyWarning = false;
+            host.IsConfirmedOffline = false;
+            host.OfflineNotificationSuppressedByMaintenance = false;
+            host.HasSuccessfulCheckThisRun = false;
+            AddOrUpdateRow(host);
+        }
+
         _activityVisibleUntil = DateTimeOffset.MinValue;
         UpdateMonitoringUi();
     }
@@ -469,7 +491,7 @@ public partial class MainForm : Form
         if (running)
             UiTheme.StyleDangerButton(btnMonitoring);
         else
-            UiTheme.StyleSuccessButton(btnMonitoring);
+            UiTheme.StylePrimaryButton(btnMonitoring);
         miTrayMonitoring.Text = running ? "Остановить мониторинг" : "Запустить мониторинг";
         tslState.Text = running ? "● Мониторинг" : "Мониторинг остановлен";
         tslState.ForeColor = running ? UiTheme.Success : UiTheme.TextMuted;
