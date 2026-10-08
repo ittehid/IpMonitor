@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Xml.Linq;
 using IpMonitor.Models;
 
@@ -45,7 +45,7 @@ internal static class HostTransferService
         var document = new HostTransferDocument
         {
             Format = "IpMonitor.Hosts",
-            SchemaVersion = 2,
+            SchemaVersion = 3,
             ExportedAt = DateTimeOffset.Now,
             Hosts = hosts
         };
@@ -76,7 +76,6 @@ internal static class HostTransferService
                 ids.Add(host.Id);
             }
             host.SortOrder = index++;
-            host.Group = host.Group?.Trim() ?? string.Empty;
             if (!host.MaintenanceIndefinite && host.MaintenanceUntil is DateTimeOffset until && until <= DateTimeOffset.Now)
                 host.MaintenanceUntil = null;
             host.State = host.Enabled ? HostState.Unknown : HostState.Disabled;
@@ -98,7 +97,7 @@ internal static class HostTransferService
     private sealed class HostTransferDocument
     {
         public string Format { get; set; } = "IpMonitor.Hosts";
-        public int SchemaVersion { get; set; } = 2;
+        public int SchemaVersion { get; set; } = 3;
         public DateTimeOffset? ExportedAt { get; set; }
         public List<MonitorHost> Hosts { get; set; } = [];
     }

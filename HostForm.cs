@@ -36,8 +36,7 @@ public partial class HostForm : Form
     internal HostForm(
         MonitorHost? host,
         AppSettings settings,
-        HostCheckService checkService,
-        IEnumerable<string>? knownGroups = null)
+        HostCheckService checkService)
         : this()
     {
         UiTheme.Apply(this);
@@ -59,9 +58,6 @@ public partial class HostForm : Form
 
         _suppressQuickAccessSync = true;
 
-        foreach (var group in (knownGroups ?? []).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct(StringComparer.CurrentCultureIgnoreCase).OrderBy(x => x))
-            cboGroup.Items.Add(group.Trim());
-
         if (host is null)
         {
             lblHeader.Text = "Добавление хоста";
@@ -79,7 +75,6 @@ public partial class HostForm : Form
             lblHeader.Text = "Редактирование хоста";
             txtName.Text = host.Name;
             txtAddress.Text = host.Address;
-            cboGroup.Text = host.Group;
             chkEnabled.Checked = host.Enabled;
             txtWebUrl.Text = host.WebUrl;
             chkRdpEnabled.Checked = host.RdpEnabled;
@@ -121,7 +116,6 @@ public partial class HostForm : Form
         SortOrder = _originalSortOrder,
         Name = txtName.Text.Trim(),
         Address = txtAddress.Text.Trim(),
-        Group = cboGroup.Text.Trim(),
         Enabled = chkEnabled.Checked,
         WebUrl = txtWebUrl.Text.Trim(),
         RdpEnabled = chkRdpEnabled.Checked,

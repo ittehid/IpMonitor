@@ -147,8 +147,7 @@ public partial class MainForm : Form
         return Math.Max(1, (int)Math.Round(logicalPixels * dpi / 96f));
     }
 
-    private int HostRowHeight => ScaleForDpi(32);
-    private int GroupRowHeight => ScaleForDpi(23);
+    private int HostRowHeight => ScaleForDpi(24);
 
     private void ApplyDpiAwareGridMetrics()
     {
@@ -160,7 +159,7 @@ public partial class MainForm : Form
         colResponse.Width = ScaleForDpi(76);
 
         foreach (DataGridViewRow row in dgvHosts.Rows)
-            row.Height = row.Tag is GroupHeaderTag ? GroupRowHeight : HostRowHeight;
+            row.Height = HostRowHeight;
 
         dgvHosts.Invalidate();
     }
@@ -225,43 +224,14 @@ public partial class MainForm : Form
         _rows.Clear();
 
         var ordered = _hosts.OrderBy(x => x.SortOrder).ToList();
-        var showGroups = ordered.Any(x => !string.IsNullOrWhiteSpace(x.Group));
-        string? lastGroup = null;
-
         foreach (var host in ordered)
-        {
-            var group = NormalizeGroup(host.Group);
-            if (showGroups && !string.Equals(group, lastGroup, StringComparison.CurrentCultureIgnoreCase))
-            {
-                AddGroupRow(group);
-                lastGroup = group;
-            }
             AddOrUpdateRow(host);
-        }
 
         UpdateSortUi();
         ApplyDpiAwareGridMetrics();
         if (IsHandleCreated)
             BeginInvoke((Action)AdjustWindowHeightToContent);
     }
-
-    private void AddGroupRow(string group)
-    {
-        var index = dgvHosts.Rows.Add("", string.IsNullOrWhiteSpace(group) ? "Без группы" : group, "", "");
-        var row = dgvHosts.Rows[index];
-        row.Tag = new GroupHeaderTag(group);
-        row.Height = GroupRowHeight;
-        row.DefaultCellStyle.BackColor = UiTheme.SurfaceAlt;
-        row.DefaultCellStyle.ForeColor = UiTheme.TextSecondary;
-        row.DefaultCellStyle.SelectionBackColor = UiTheme.SurfaceAlt;
-        row.DefaultCellStyle.SelectionForeColor = UiTheme.TextSecondary;
-        row.DefaultCellStyle.Font = new Font("Segoe UI Semibold", 7.75F);
-        row.Cells[colName.Index].Value = string.IsNullOrWhiteSpace(group) ? "— Без группы —" : $"— {group} —";
-    }
-
-    private static string NormalizeGroup(string? value) => value?.Trim() ?? string.Empty;
-
-    private sealed record GroupHeaderTag(string Group);
 
     private void AddOrUpdateRow(MonitorHost host)
     {
@@ -279,6 +249,18 @@ public partial class MainForm : Form
         row.Cells[colAddress.Index].Value = host.Address;
         row.Cells[colResponse.Index].Value = BuildResponseText(host);
         row.DefaultCellStyle.ForeColor = host.State == HostState.Disabled ? UiTheme.TextMuted : UiTheme.TextPrimary;
+        ApplyHostTooltip(row, host);
+    }
+
+    private void ApplyHostTooltip(DataGridViewRow row, MonitorHost host)
+    {
+        var tooltipText = BuildHostTooltip(host);
+
+        // DataGridViewRow не имеет свойства ToolTipText. Подсказка задаётся
+        // непосредственно ячейкам строки, поэтому IP/DNS остаётся скрытым
+        // в таблице, но доступен при наведении на любую видимую ячейку хоста.
+        foreach (DataGridViewCell cell in row.Cells)
+            cell.ToolTipText = tooltipText;
     }
 
     private void RefreshDynamicValues()
@@ -289,6 +271,7 @@ public partial class MainForm : Form
                 continue;
             row.Cells[colStatus.Index].Value = StatusGlyph(host);
             row.Cells[colResponse.Index].Value = BuildResponseText(host);
+            ApplyHostTooltip(row, host);
         }
 
         UpdatePingActivity();
@@ -552,7 +535,7 @@ public partial class MainForm : Form
 
     private void AddHost()
     {
-        using var form = new HostForm(null, _settings, _hostCheckService, KnownGroups());
+        using var form = new HostForm(null, _settings, _hostCheckService);
         if (form.ShowDialog(this) != DialogResult.OK || form.Host is null)
             return;
 
@@ -587,12 +570,6 @@ private void miAbout_Click(object? sender, EventArgs e)
         using var form = new AboutForm();
         form.ShowDialog(this);
     }
-
-    private IEnumerable<string> KnownGroups() => _hosts
-        .Select(x => NormalizeGroup(x.Group))
-        .Where(x => !string.IsNullOrWhiteSpace(x))
-        .Distinct(StringComparer.CurrentCultureIgnoreCase)
-        .OrderBy(x => x, StringComparer.CurrentCultureIgnoreCase);
 
     private void miExit_Click(object? sender, EventArgs e)
     {
@@ -720,7 +697,7 @@ private void miAbout_Click(object? sender, EventArgs e)
         if (dialog.FileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
         {
             var choice = MessageBox.Show(this,
-                "Старый XML хранит только название и IP/адрес. Группы, обслуживание, Web/RDP, TCP и индивидуальные настройки в XML не попадут.\n\nПродолжить?",
+                "Старый XML хранит только название и IP/адрес. Обслуживание, Web/RDP, TCP и индивидуальные настройки в XML не попадут.\n\nПродолжить?",
                 "Экспорт в старый формат", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (choice != DialogResult.Yes)
                 return;
@@ -779,7 +756,6 @@ private void miAbout_Click(object? sender, EventArgs e)
         TryAutomaticBackup();
         _settings.HostSortMode = HostSortMode.Manual;
         _settingsRepository.Save(_settings);
-        NormalizeGroupBlocks();
         NormalizeSortOrder();
         _hostRepository.Save(_hosts, _settings);
         LoadGrid();
@@ -788,58 +764,28 @@ private void miAbout_Click(object? sender, EventArgs e)
 
     private void SortHostsInMemory(HostSortMode mode)
     {
-        var groupComparer = StringComparer.CurrentCultureIgnoreCase;
+        var nameComparer = StringComparer.CurrentCultureIgnoreCase;
         var addressComparer = Comparer<string>.Create(CompareAddresses);
 
         switch (mode)
         {
             case HostSortMode.NameAscending:
-                _hosts = _hosts
-                    .OrderBy(x => NormalizeGroup(x.Group), groupComparer)
-                    .ThenBy(x => x.Name, groupComparer)
-                    .ToList();
+                _hosts = _hosts.OrderBy(x => x.Name, nameComparer).ToList();
                 break;
             case HostSortMode.NameDescending:
-                _hosts = _hosts
-                    .OrderBy(x => NormalizeGroup(x.Group), groupComparer)
-                    .ThenByDescending(x => x.Name, groupComparer)
-                    .ToList();
+                _hosts = _hosts.OrderByDescending(x => x.Name, nameComparer).ToList();
                 break;
             case HostSortMode.AddressAscending:
-                _hosts = _hosts
-                    .OrderBy(x => NormalizeGroup(x.Group), groupComparer)
-                    .ThenBy(x => x.Address ?? string.Empty, addressComparer)
-                    .ToList();
+                _hosts = _hosts.OrderBy(x => x.Address ?? string.Empty, addressComparer).ToList();
                 break;
             case HostSortMode.AddressDescending:
-                _hosts = _hosts
-                    .OrderBy(x => NormalizeGroup(x.Group), groupComparer)
-                    .ThenByDescending(x => x.Address ?? string.Empty, addressComparer)
-                    .ToList();
+                _hosts = _hosts.OrderByDescending(x => x.Address ?? string.Empty, addressComparer).ToList();
                 break;
             case HostSortMode.Manual:
             default:
                 _hosts = _hosts.OrderBy(x => x.SortOrder).ToList();
-                NormalizeGroupBlocks();
                 break;
         }
-    }
-
-    private void NormalizeGroupBlocks()
-    {
-        if (!_hosts.Any(x => !string.IsNullOrWhiteSpace(x.Group)))
-            return;
-
-        var snapshot = _hosts.ToList();
-        var groups = snapshot
-            .Select(x => NormalizeGroup(x.Group))
-            .Distinct(StringComparer.CurrentCultureIgnoreCase)
-            .ToList();
-
-        _hosts = groups
-            .SelectMany(group => snapshot.Where(x => string.Equals(
-                NormalizeGroup(x.Group), group, StringComparison.CurrentCultureIgnoreCase)))
-            .ToList();
     }
 
     private void NormalizeSortOrder()
@@ -919,19 +865,12 @@ private void miAbout_Click(object? sender, EventArgs e)
         if (host is null)
             return;
 
-        var group = NormalizeGroup(host.Group);
-        var groupHosts = _hosts
-            .Where(x => string.Equals(NormalizeGroup(x.Group), group, StringComparison.CurrentCultureIgnoreCase))
-            .ToList();
-        var position = groupHosts.FindIndex(x => x.Id == host.Id);
+        var position = _hosts.FindIndex(x => x.Id == host.Id);
         var targetPosition = position + offset;
-        if (position < 0 || targetPosition < 0 || targetPosition >= groupHosts.Count)
+        if (position < 0 || targetPosition < 0 || targetPosition >= _hosts.Count)
             return;
 
-        var targetHost = groupHosts[targetPosition];
-        var sourceIndex = _hosts.FindIndex(x => x.Id == host.Id);
-        var targetIndex = _hosts.FindIndex(x => x.Id == targetHost.Id);
-        (_hosts[sourceIndex], _hosts[targetIndex]) = (_hosts[targetIndex], _hosts[sourceIndex]);
+        (_hosts[position], _hosts[targetPosition]) = (_hosts[targetPosition], _hosts[position]);
         SwitchToManualOrderAndSave(host.Id);
     }
 
@@ -995,36 +934,18 @@ private void miAbout_Click(object? sender, EventArgs e)
         var client = dgvHosts.PointToClient(new Point(e.X, e.Y));
         var hit = dgvHosts.HitTest(client.X, client.Y);
         var targetIndex = _hosts.Count;
-        string? targetGroup = null;
 
-        if (hit.RowIndex >= 0)
+        if (hit.RowIndex >= 0 && dgvHosts.Rows[hit.RowIndex].Tag is Guid targetId)
         {
-            var tag = dgvHosts.Rows[hit.RowIndex].Tag;
-            if (tag is Guid targetId)
+            targetIndex = _hosts.FindIndex(x => x.Id == targetId);
+            if (targetIndex < 0)
+                targetIndex = _hosts.Count;
+            else
             {
-                var targetHost = _hosts.FirstOrDefault(x => x.Id == targetId);
-                if (targetHost is not null)
-                {
-                    targetGroup = NormalizeGroup(targetHost.Group);
-                    targetIndex = _hosts.FindIndex(x => x.Id == targetId);
-                    var rowRect = dgvHosts.GetRowDisplayRectangle(hit.RowIndex, false);
-                    if (client.Y > rowRect.Top + rowRect.Height / 2)
-                        targetIndex++;
-                }
+                var rowRect = dgvHosts.GetRowDisplayRectangle(hit.RowIndex, false);
+                if (client.Y > rowRect.Top + rowRect.Height / 2)
+                    targetIndex++;
             }
-            else if (tag is GroupHeaderTag groupHeader)
-            {
-                targetGroup = groupHeader.Group;
-                var firstInGroup = _hosts.FindIndex(x => string.Equals(
-                    NormalizeGroup(x.Group), targetGroup, StringComparison.CurrentCultureIgnoreCase));
-                targetIndex = firstInGroup >= 0 ? firstInGroup : _hosts.Count;
-            }
-        }
-
-        if (targetGroup is not null && !string.Equals(
-            NormalizeGroup(host.Group), targetGroup, StringComparison.CurrentCultureIgnoreCase))
-        {
-            host.Group = targetGroup;
         }
 
         _hosts.RemoveAt(sourceIndex);
@@ -1074,11 +995,9 @@ private void miAbout_Click(object? sender, EventArgs e)
         var lines = new List<string>
         {
             host.Name,
-            host.Address
+            $"Адрес: {host.Address}"
         };
 
-        if (!string.IsNullOrWhiteSpace(host.Group))
-            lines.Add($"Группа: {host.Group}");
 
         if (host.IsInMaintenance)
         {
@@ -1123,33 +1042,6 @@ private void miAbout_Click(object? sender, EventArgs e)
 
         var row = dgvHosts.Rows[e.RowIndex];
 
-        if (row.Tag is GroupHeaderTag groupHeader)
-        {
-            e.PaintBackground(e.CellBounds, true);
-            if (e.ColumnIndex == colName.Index)
-            {
-                var count = _hosts.Count(x => string.Equals(
-                    NormalizeGroup(x.Group), groupHeader.Group, StringComparison.CurrentCultureIgnoreCase));
-                var title = string.IsNullOrWhiteSpace(groupHeader.Group)
-                    ? $"БЕЗ ГРУППЫ  ·  {count}"
-                    : $"{groupHeader.Group.ToUpperInvariant()}  ·  {count}";
-
-                var bounds = Rectangle.Inflate(e.CellBounds, -8, 0);
-                TextRenderer.DrawText(
-                    e.Graphics,
-                    title,
-                    row.DefaultCellStyle.Font ?? dgvHosts.Font,
-                    bounds,
-                    UiTheme.TextSecondary,
-                    TextFormatFlags.Left | TextFormatFlags.VerticalCenter |
-                    TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding);
-            }
-
-            e.Paint(e.ClipBounds, DataGridViewPaintParts.Border);
-            e.Handled = true;
-            return;
-        }
-
         if (row.Tag is not Guid id)
             return;
 
@@ -1187,21 +1079,12 @@ private void miAbout_Click(object? sender, EventArgs e)
 
             var textColor = host.State == HostState.Disabled ? UiTheme.TextMuted : UiTheme.TextPrimary;
             using var nameFont = new Font("Segoe UI Semibold", 8.5F, FontStyle.Regular, GraphicsUnit.Point);
-            using var addressFont = new Font("Segoe UI", 7.25F, FontStyle.Regular, GraphicsUnit.Point);
-
-            // Размеры текста считаем по реальному DPI Graphics. Жёсткие 18/16 px
-            // обрезали шрифт при масштабировании Windows 150–200%.
-            var nameHeight = (int)Math.Ceiling(nameFont.GetHeight(e.Graphics)) + 2;
-            var addressHeight = (int)Math.Ceiling(addressFont.GetHeight(e.Graphics)) + 2;
-            var totalTextHeight = nameHeight + addressHeight;
-            var startY = e.CellBounds.Y + Math.Max(1, (e.CellBounds.Height - totalTextHeight) / 2);
             var horizontalPadding = Math.Max(4, (int)Math.Round(5 * e.Graphics.DpiX / 96f));
-            var textWidth = Math.Max(4, e.CellBounds.Width - horizontalPadding * 2);
-
             var nameBounds = new Rectangle(
-                e.CellBounds.X + horizontalPadding, startY, textWidth, nameHeight);
-            var addressBounds = new Rectangle(
-                e.CellBounds.X + horizontalPadding, startY + nameHeight, textWidth, addressHeight);
+                e.CellBounds.X + horizontalPadding,
+                e.CellBounds.Y,
+                Math.Max(4, e.CellBounds.Width - horizontalPadding * 2),
+                e.CellBounds.Height);
 
             TextRenderer.DrawText(
                 e.Graphics,
@@ -1209,18 +1092,6 @@ private void miAbout_Click(object? sender, EventArgs e)
                 nameFont,
                 nameBounds,
                 textColor,
-                TextFormatFlags.Left | TextFormatFlags.VerticalCenter |
-                TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding | TextFormatFlags.SingleLine);
-
-            var address = host.CheckType == CheckType.Tcp
-                ? $"{host.Address}:{host.TcpPort}"
-                : host.Address;
-            TextRenderer.DrawText(
-                e.Graphics,
-                address,
-                addressFont,
-                addressBounds,
-                UiTheme.TextMuted,
                 TextFormatFlags.Left | TextFormatFlags.VerticalCenter |
                 TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding | TextFormatFlags.SingleLine);
 
@@ -1301,12 +1172,9 @@ private void miAbout_Click(object? sender, EventArgs e)
         miMaintenanceEnd.Enabled = host.IsInMaintenance;
         miMaintenance.Text = host.IsInMaintenance ? "◆ Режим обслуживания" : "Режим обслуживания";
 
-        var group = NormalizeGroup(host.Group);
-        var groupHosts = _hosts.Where(x => string.Equals(
-            NormalizeGroup(x.Group), group, StringComparison.CurrentCultureIgnoreCase)).ToList();
-        var groupIndex = groupHosts.FindIndex(x => x.Id == host.Id);
-        miMoveUp.Enabled = groupIndex > 0;
-        miMoveDown.Enabled = groupIndex >= 0 && groupIndex < groupHosts.Count - 1;
+        var hostIndex = _hosts.FindIndex(x => x.Id == host.Id);
+        miMoveUp.Enabled = hostIndex > 0;
+        miMoveDown.Enabled = hostIndex >= 0 && hostIndex < _hosts.Count - 1;
     }
 
     private void miMaintenance15m_Click(object? sender, EventArgs e) => SetMaintenance(TimeSpan.FromMinutes(15));
@@ -1411,7 +1279,7 @@ private void miAbout_Click(object? sender, EventArgs e)
         if (host is null)
             return;
 
-        using var form = new HostForm(host, _settings, _hostCheckService, KnownGroups());
+        using var form = new HostForm(host, _settings, _hostCheckService);
         if (form.ShowDialog(this) != DialogResult.OK || form.Host is null)
             return;
 

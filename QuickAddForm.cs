@@ -47,13 +47,10 @@ public partial class QuickAddForm : Form
             var parts = SplitLine(line);
             string name;
             string address;
-            var group = string.Empty;
             if (parts.Length >= 2)
             {
                 name = parts[0].Trim();
                 address = parts[1].Trim();
-                if (parts.Length >= 3)
-                    group = parts[2].Trim();
             }
             else
             {
@@ -64,11 +61,7 @@ public partial class QuickAddForm : Form
             if (string.IsNullOrWhiteSpace(address))
                 continue;
 
-            var rowIndex = dgvPreview.Rows.Add(true, string.IsNullOrWhiteSpace(name) ? address : name, address, "Не проверен");
-            var row = dgvPreview.Rows[rowIndex];
-            row.Tag = group;
-            if (!string.IsNullOrWhiteSpace(group))
-                row.Cells[colQuickName.Index].ToolTipText = $"Группа: {group}";
+            dgvPreview.Rows.Add(true, string.IsNullOrWhiteSpace(name) ? address : name, address, "Не проверен");
         }
         UpdateCount();
     }
@@ -76,11 +69,11 @@ public partial class QuickAddForm : Form
     private static string[] SplitLine(string line)
     {
         if (line.Contains('\t'))
-            return line.Split('\t', 3, StringSplitOptions.TrimEntries);
+            return line.Split('\t', StringSplitOptions.TrimEntries);
         if (line.Contains(';'))
-            return line.Split(';', 3, StringSplitOptions.TrimEntries);
+            return line.Split(';', StringSplitOptions.TrimEntries);
         if (line.Contains(','))
-            return line.Split(',', 3, StringSplitOptions.TrimEntries);
+            return line.Split(',', StringSplitOptions.TrimEntries);
         return [line];
     }
 
@@ -136,7 +129,6 @@ public partial class QuickAddForm : Form
             {
                 Name = string.IsNullOrWhiteSpace(name) ? address : name,
                 Address = address,
-                Group = Convert.ToString(row.Tag)?.Trim() ?? string.Empty,
                 Enabled = true
             });
         }

@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace IpMonitor.Models;
 
@@ -7,7 +7,6 @@ public sealed class MonitorHost
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = "Новый хост";
     public string Address { get; set; } = string.Empty;
-    public string Group { get; set; } = string.Empty;
     public bool Enabled { get; set; } = true;
     public string WebUrl { get; set; } = string.Empty;
     public bool RdpEnabled { get; set; }

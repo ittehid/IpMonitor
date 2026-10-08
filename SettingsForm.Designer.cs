@@ -17,7 +17,6 @@ partial class SettingsForm
     private CheckBox chkMinimizeToTray;
     private CheckBox chkStartWithWindows;
     private CheckBox chkAlwaysOnTop;
-    private Label lblGeneralHint;
     private Label lblInterval;
     private NumericUpDown nudInterval;
     private Label lblSeconds;
@@ -86,7 +85,6 @@ partial class SettingsForm
         chkMinimizeToTray = new CheckBox();
         chkStartWithWindows = new CheckBox();
         chkAlwaysOnTop = new CheckBox();
-        lblGeneralHint = new Label();
         lblInterval = new Label();
         nudInterval = new NumericUpDown();
         lblSeconds = new Label();
@@ -178,7 +176,6 @@ partial class SettingsForm
         tabGeneral.Controls.Add(chkMinimizeToTray);
         tabGeneral.Controls.Add(chkStartWithWindows);
         tabGeneral.Controls.Add(chkAlwaysOnTop);
-        tabGeneral.Controls.Add(lblGeneralHint);
         tabGeneral.Text = "Общие";
         chkStartMonitoring.AutoSize = true;
         chkStartMonitoring.Location = new Point(14, 18);
@@ -192,9 +189,6 @@ partial class SettingsForm
         chkAlwaysOnTop.AutoSize = true;
         chkAlwaysOnTop.Location = new Point(14, 108);
         chkAlwaysOnTop.Text = "Всегда поверх других окон";
-        lblGeneralHint.Location = new Point(14, 148);
-        lblGeneralHint.Size = new Size(345, 38);
-        lblGeneralHint.Text = "Строгий светлый интерфейс IP Monitor используется постоянно.";
 
         // Мониторинг
         tabMonitoring.BackColor = Color.White;

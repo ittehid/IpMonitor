@@ -87,7 +87,6 @@ public partial class SettingsForm : Form
         UiTheme.StyleSecondaryButton(btnBackupNow);
         UiTheme.StyleSecondaryButton(btnOpenBackupFolder);
         lblHeaderHint.ForeColor = UiTheme.TextMuted;
-        lblGeneralHint.ForeColor = UiTheme.TextMuted;
         lblFailuresHint.ForeColor = UiTheme.TextMuted;
         lblSuccessesHint.ForeColor = UiTheme.TextMuted;
         lblLatencyHint.ForeColor = UiTheme.TextMuted;

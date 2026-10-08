@@ -78,7 +78,7 @@ partial class QuickAddForm
         lblHint.Font = new Font("Segoe UI", 7.35F);
         lblHint.Margin = new Padding(0, 0, 0, 7);
         lblHint.Name = "lblHint";
-        lblHint.Text = "Формат: Название;Адрес;Группа. Группа необязательна.";
+        lblHint.Text = "Формат: Название;Адрес. Название можно не указывать.";
 
         txtHosts.AcceptsReturn = true;
         txtHosts.Dock = DockStyle.Fill;
@@ -86,7 +86,7 @@ partial class QuickAddForm
         txtHosts.Margin = new Padding(0, 0, 0, 7);
         txtHosts.Multiline = true;
         txtHosts.Name = "txtHosts";
-        txtHosts.PlaceholderText = "MikroTik CORE;10.0.99.2;СЕТЬ\r\nMail Server;10.0.8.122;СЕРВЕРЫ";
+        txtHosts.PlaceholderText = "MikroTik CORE;10.0.99.2\r\nMail Server;10.0.8.122";
         txtHosts.ScrollBars = ScrollBars.Vertical;
 
         flpActions.AutoSize = true;

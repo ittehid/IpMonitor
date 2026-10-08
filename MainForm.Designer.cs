@@ -441,7 +441,7 @@ partial class MainForm
         colStatus.Width = 30;
         colStatus.SortMode = DataGridViewColumnSortMode.NotSortable;
         colName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        colName.HeaderText = "Хост / адрес";
+        colName.HeaderText = "Хост";
         colName.SortMode = DataGridViewColumnSortMode.Programmatic;
         colName.Name = "colName";
         colName.MinimumWidth = 115;

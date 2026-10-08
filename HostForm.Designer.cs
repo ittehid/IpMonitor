@@ -20,8 +20,6 @@ partial class HostForm
     private Label lblTestResult;
     private TableLayoutPanel tlpState;
     private CheckBox chkEnabled;
-    private Label lblGroup;
-    private ComboBox cboGroup;
     private GroupBox grpAccess;
     private TableLayoutPanel tlpAccess;
     private Label lblWeb;
@@ -83,8 +81,6 @@ partial class HostForm
         lblTestResult = new Label();
         tlpState = new TableLayoutPanel();
         chkEnabled = new CheckBox();
-        lblGroup = new Label();
-        cboGroup = new ComboBox();
         grpAccess = new GroupBox();
         tlpAccess = new TableLayoutPanel();
         lblWeb = new Label();
@@ -327,13 +323,9 @@ partial class HostForm
         // 
         tlpState.AutoSize = true;
         tlpState.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        tlpState.ColumnCount = 3;
-        tlpState.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 42F));
-        tlpState.ColumnStyles.Add(new ColumnStyle());
-        tlpState.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 58F));
+        tlpState.ColumnCount = 1;
+        tlpState.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
         tlpState.Controls.Add(chkEnabled, 0, 0);
-        tlpState.Controls.Add(lblGroup, 1, 0);
-        tlpState.Controls.Add(cboGroup, 2, 0);
         tlpState.Dock = DockStyle.Fill;
         tlpState.Location = new Point(24, 362);
         tlpState.Margin = new Padding(0, 0, 0, 14);
@@ -352,34 +344,10 @@ partial class HostForm
         chkEnabled.Location = new Point(0, 0);
         chkEnabled.Margin = new Padding(0);
         chkEnabled.Name = "chkEnabled";
-        chkEnabled.Size = new Size(283, 38);
+        chkEnabled.Size = new Size(780, 38);
         chkEnabled.TabIndex = 0;
         chkEnabled.Text = "Мониторинг";
         chkEnabled.UseVisualStyleBackColor = true;
-        // 
-        // lblGroup
-        // 
-        lblGroup.AutoSize = true;
-        lblGroup.Dock = DockStyle.Fill;
-        lblGroup.Location = new Point(297, 0);
-        lblGroup.Margin = new Padding(14, 0, 7, 0);
-        lblGroup.Name = "lblGroup";
-        lblGroup.Size = new Size(85, 38);
-        lblGroup.TabIndex = 1;
-        lblGroup.Text = "Группа:";
-        lblGroup.TextAlign = ContentAlignment.MiddleRight;
-        // 
-        // cboGroup
-        // 
-        cboGroup.Dock = DockStyle.Fill;
-        cboGroup.FlatStyle = FlatStyle.Standard;
-        cboGroup.FormattingEnabled = true;
-        cboGroup.Location = new Point(389, 0);
-        cboGroup.Margin = new Padding(0);
-        cboGroup.MaxLength = 60;
-        cboGroup.Name = "cboGroup";
-        cboGroup.Size = new Size(391, 38);
-        cboGroup.TabIndex = 2;
         // 
         // grpAccess
         // 

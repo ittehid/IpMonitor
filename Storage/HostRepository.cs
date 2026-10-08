@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using IpMonitor.Models;
 
 namespace IpMonitor.Storage;
@@ -62,7 +62,7 @@ internal sealed class HostRepository
 
             var document = new HostStorageDocument
             {
-                SchemaVersion = 2,
+                SchemaVersion = 3,
                 SavedAt = DateTimeOffset.Now,
                 Hosts = ordered
             };
@@ -76,7 +76,6 @@ internal sealed class HostRepository
         var seenIds = new HashSet<Guid>();
         foreach (var host in hosts)
         {
-            host.Group = host.Group?.Trim() ?? string.Empty;
             if (!host.MaintenanceIndefinite && host.MaintenanceUntil is DateTimeOffset until && until <= DateTimeOffset.Now)
                 host.MaintenanceUntil = null;
 
@@ -95,7 +94,7 @@ internal sealed class HostRepository
 
     private sealed class HostStorageDocument
     {
-        public int SchemaVersion { get; set; } = 2;
+        public int SchemaVersion { get; set; } = 3;
         public DateTimeOffset SavedAt { get; set; }
         public List<MonitorHost> Hosts { get; set; } = [];
     }
