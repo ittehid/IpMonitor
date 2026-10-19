@@ -4,7 +4,7 @@ namespace IpMonitor;
 
 partial class SettingsForm
 {
-    private IContainer? components = null;
+    private IContainer components = null;
     private Label lblHeader;
     private Label lblHeaderHint;
     private TabControl tabSettings;

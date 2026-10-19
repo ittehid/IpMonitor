@@ -24,6 +24,7 @@ public partial class MainForm : Form
     private Guid? _dragHostId;
     private Point _dragStartPoint;
     private bool _adjustingWindowHeight;
+    private AboutForm? _aboutForm;
 
     public MainForm()
     {
@@ -565,10 +566,24 @@ public partial class MainForm : Form
         UpdateSortUi();
         cmsMore.Show(btnMore, new Point(0, btnMore.Height + 2));
     }
-private void miAbout_Click(object? sender, EventArgs e)
+    private void miAbout_Click(object? sender, EventArgs e)
     {
-        using var form = new AboutForm();
-        form.ShowDialog(this);
+        RestoreWindow();
+
+        if (_aboutForm is { IsDisposed: false })
+        {
+            _aboutForm.Show();
+            _aboutForm.Activate();
+            return;
+        }
+
+        // Справочное окно не должно блокировать главное окно или создавать
+        // вложенные модальные диалоги при повторном открытии из трея.
+        var form = new AboutForm { TopMost = TopMost };
+        _aboutForm = form;
+        form.FormClosed += (_, _) => _aboutForm = null;
+        form.Show(this);
+        form.Activate();
     }
 
     private void miExit_Click(object? sender, EventArgs e)
@@ -595,6 +610,8 @@ private void miAbout_Click(object? sender, EventArgs e)
         TryAutomaticBackup();
         try { BackupService.Cleanup(_settings); } catch { }
         TopMost = _settings.AlwaysOnTop;
+        if (_aboutForm is { IsDisposed: false })
+            _aboutForm.TopMost = TopMost;
         try { StartupService.SetEnabled(_settings.StartWithWindows); }
         catch (Exception ex)
         {
@@ -1037,7 +1054,7 @@ private void miAbout_Click(object? sender, EventArgs e)
 
     private void dgvHosts_CellPainting(object? sender, DataGridViewCellPaintingEventArgs e)
     {
-        if (e.RowIndex < 0 || e.ColumnIndex < 0)
+        if (e.RowIndex < 0 || e.ColumnIndex < 0 || e.Graphics is null)
             return;
 
         var row = dgvHosts.Rows[e.RowIndex];

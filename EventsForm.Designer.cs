@@ -4,7 +4,7 @@ namespace IpMonitor;
 
 partial class EventsForm
 {
-    private IContainer? components = null;
+    private IContainer components = null;
     private Label lblHeader;
     private Label lblHeaderHint;
     private Panel pnlFilters;

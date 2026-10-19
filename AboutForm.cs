@@ -14,6 +14,7 @@ public partial class AboutForm : Form
         lblVersion.ForeColor = UiTheme.TextMuted;
         lblDescription.ForeColor = UiTheme.TextSecondary;
         lblAuthor.ForeColor = UiTheme.TextSecondary;
+        lblThanks.ForeColor = UiTheme.TextSecondary;
         linkEmail.LinkColor = UiTheme.Accent;
         linkEmail.ActiveLinkColor = UiTheme.AccentDark;
         linkEmail.VisitedLinkColor = UiTheme.Accent;
@@ -28,6 +29,23 @@ public partial class AboutForm : Form
         if (Icon is not null)
             picIcon.Image = Icon.ToBitmap();
     }
+
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+
+        // CenterParent применяется WinForms только к модальным диалогам.
+        // Учитываем рабочую область монитора, когда главное окно стоит у края.
+        var workingArea = Screen.FromControl(Owner ?? this).WorkingArea;
+        var parentBounds = Owner?.Bounds ?? workingArea;
+        Location = new Point(
+            Math.Clamp(parentBounds.Left + (parentBounds.Width - Width) / 2,
+                workingArea.Left, Math.Max(workingArea.Left, workingArea.Right - Width)),
+            Math.Clamp(parentBounds.Top + (parentBounds.Height - Height) / 2,
+                workingArea.Top, Math.Max(workingArea.Top, workingArea.Bottom - Height)));
+    }
+
+    private void btnClose_Click(object? sender, EventArgs e) => Close();
 
     private void linkEmail_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
         => OpenLink("mailto:ittehid@gmail.com", "Не удалось открыть почтовую программу");

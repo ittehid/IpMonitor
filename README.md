@@ -81,3 +81,7 @@ Backups\
 **Alexandr Gedz**
 
 E-mail: `ittehid@gmail.com`
+
+## Благодарности
+
+**Evdokimov Dmitriu** — за идеи по развитию и доработке программы.

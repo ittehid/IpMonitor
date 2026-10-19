@@ -4,7 +4,7 @@ namespace IpMonitor;
 
 partial class QuickAddForm
 {
-    private IContainer? components = null;
+    private IContainer components = null;
     private TableLayoutPanel tlpRoot;
     private Label lblHeader;
     private Label lblHint;

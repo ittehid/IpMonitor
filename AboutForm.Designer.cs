@@ -4,19 +4,24 @@ namespace IpMonitor;
 
 partial class AboutForm
 {
-    private IContainer? components = null;
+    private IContainer components = null;
     private PictureBox picIcon;
     private Label lblTitle;
     private Label lblVersion;
     private Label lblDescription;
     private Label lblAuthor;
+    private Label lblThanks;
     private LinkLabel linkEmail;
     private LinkLabel linkGitHub;
     private Button btnClose;
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing) components?.Dispose();
+        if (disposing)
+        {
+            picIcon.Image?.Dispose();
+            components?.Dispose();
+        }
         base.Dispose(disposing);
     }
 
@@ -28,6 +33,7 @@ partial class AboutForm
         lblVersion = new Label();
         lblDescription = new Label();
         lblAuthor = new Label();
+        lblThanks = new Label();
         linkEmail = new LinkLabel();
         linkGitHub = new LinkLabel();
         btnClose = new Button();
@@ -74,23 +80,30 @@ partial class AboutForm
         linkGitHub.Text = "github.com/ittehid/IpMonitor";
         linkGitHub.LinkClicked += linkGitHub_LinkClicked;
 
+        lblThanks.Location = new Point(16, 200);
+        lblThanks.Name = "lblThanks";
+        lblThanks.Size = new Size(300, 48);
+        lblThanks.Text = "Благодарность Evdokimov Dmitriu\r\nза идеи по развитию и доработке программы.";
+
         btnClose.DialogResult = DialogResult.Cancel;
-        btnClose.Location = new Point(220, 200);
-                btnClose.Name = "btnClose";
+        btnClose.Location = new Point(220, 260);
+        btnClose.Name = "btnClose";
         btnClose.Size = new Size(96, 27);
         btnClose.Text = "Закрыть";
+        btnClose.Click += btnClose_Click;
 
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
         CancelButton = btnClose;
         BackColor = Color.FromArgb(243, 245, 247);
         ForeColor = Color.FromArgb(31, 41, 55);
-        ClientSize = new Size(330, 240);
+        ClientSize = new Size(330, 300);
         Controls.Add(picIcon);
         Controls.Add(lblTitle);
         Controls.Add(lblVersion);
         Controls.Add(lblDescription);
         Controls.Add(lblAuthor);
+        Controls.Add(lblThanks);
         Controls.Add(linkEmail);
         Controls.Add(linkGitHub);
         Controls.Add(btnClose);
@@ -99,7 +112,7 @@ partial class AboutForm
         MinimizeBox = false;
         Name = "AboutForm";
         ShowInTaskbar = false;
-        StartPosition = FormStartPosition.CenterParent;
+        StartPosition = FormStartPosition.Manual;
         Text = "О программе — IP Monitor";
         ((ISupportInitialize)picIcon).EndInit();
         ResumeLayout(false);

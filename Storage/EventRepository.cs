@@ -134,13 +134,18 @@ internal sealed class EventRepository
         if (ids.Count == 0)
             return false;
 
-        var all = LoadAll().OrderBy(x => x.Timestamp).ToList();
-        var keep = all.Where(x => !ids.Contains(x.Id)).OrderBy(x => x.Timestamp).ToList();
-        if (keep.Count == all.Count)
-            return false;
+        // Блокировка охватывает чтение и перезапись: Append не должен записать
+        // новое событие между получением снимка и заменой содержимого файла.
+        lock (_sync)
+        {
+            var all = LoadAll().OrderBy(x => x.Timestamp).ToList();
+            var keep = all.Where(x => !ids.Contains(x.Id)).OrderBy(x => x.Timestamp).ToList();
+            if (keep.Count == all.Count)
+                return false;
 
-        Rewrite(keep);
-        return true;
+            Rewrite(keep);
+            return true;
+        }
     }
 
     /// <summary>
@@ -148,9 +153,12 @@ internal sealed class EventRepository
     /// </summary>
     public void Clear()
     {
-        var all = LoadAll().OrderBy(x => x.Timestamp).ToList();
-        var openOffline = FindOpenOfflineEvents(all);
-        Rewrite(openOffline.Values.OrderBy(x => x.Timestamp));
+        lock (_sync)
+        {
+            var all = LoadAll().OrderBy(x => x.Timestamp).ToList();
+            var openOffline = FindOpenOfflineEvents(all);
+            Rewrite(openOffline.Values.OrderBy(x => x.Timestamp));
+        }
     }
 
     public void Prune(int retentionDays)
@@ -158,19 +166,22 @@ internal sealed class EventRepository
         if (retentionDays <= 0)
             return;
 
-        var border = DateTimeOffset.Now.AddDays(-retentionDays);
-        var all = LoadAll().OrderBy(x => x.Timestamp).ToList();
-        var openOffline = FindOpenOfflineEvents(all);
-        var openIds = openOffline.Values.Select(x => x.Id).ToHashSet();
+        lock (_sync)
+        {
+            var border = DateTimeOffset.Now.AddDays(-retentionDays);
+            var all = LoadAll().OrderBy(x => x.Timestamp).ToList();
+            var openOffline = FindOpenOfflineEvents(all);
+            var openIds = openOffline.Values.Select(x => x.Id).ToHashSet();
 
-        // Старые завершённые события удаляются, но начало любого текущего Offline
-        // сохраняется независимо от возраста, иначе потеряется точное время падения.
-        var keep = all
-            .Where(x => x.Timestamp >= border || openIds.Contains(x.Id))
-            .OrderBy(x => x.Timestamp)
-            .ToList();
+            // Старые завершённые события удаляются, но начало любого текущего Offline
+            // сохраняется независимо от возраста, иначе потеряется точное время падения.
+            var keep = all
+                .Where(x => x.Timestamp >= border || openIds.Contains(x.Id))
+                .OrderBy(x => x.Timestamp)
+                .ToList();
 
-        Rewrite(keep);
+            Rewrite(keep);
+        }
     }
 
     public void ExportCsv(string path, IEnumerable<OutageRecord> outages)

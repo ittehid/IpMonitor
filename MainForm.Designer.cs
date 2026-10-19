@@ -4,7 +4,7 @@ namespace IpMonitor;
 
 partial class MainForm
 {
-    private IContainer? components = null;
+    private IContainer components = null;
     private Panel pnlToolbar;
     private Label lblTitle;
     private Label lblSubtitle;

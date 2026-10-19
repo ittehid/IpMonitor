@@ -4,7 +4,7 @@ namespace IpMonitor;
 
 partial class HostForm
 {
-    private IContainer? components = null;
+    private IContainer components = null;
     private TableLayoutPanel tlpRoot;
     private Panel pnlContent;
     private TableLayoutPanel tlpMain;
